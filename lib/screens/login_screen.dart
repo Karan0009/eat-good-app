@@ -15,16 +15,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
     return GestureDetector(
-      onTap: (() {
-        print("hello");
-        // FocusScope.of(context).requestFocus();
-        print(FocusManager.instance.primaryFocus.toString());
+      onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
-      }),
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Container(
               height: screenHeight,
               // decoration: const BoxDecoration(color: Colors.yellow),
@@ -33,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 40),
+                    padding: const EdgeInsets.only(left: 40, top: 40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -148,8 +146,7 @@ class CustomDivider extends StatelessWidget {
 }
 
 class CustomInput extends StatelessWidget {
-  CustomInput({super.key});
-  final FocusNode _focusNode = FocusNode();
+  const CustomInput({super.key});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -179,7 +176,6 @@ class CustomInput extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Form(
                   child: TextFormField(
-                    focusNode: _focusNode,
                     style: const TextStyle(
                       color: Color.fromRGBO(102, 112, 133, 1),
                       fontWeight: FontWeight.w400,

@@ -3,7 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:login_screen_2/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
+import '../components/login_screen_footer.dart';
 import '../components/rounded_border_on_some_sides_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -159,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
-                    child: Footer(),
+                    child: LoginScreenFooter(),
                   )
                 ],
               ),
@@ -337,6 +340,13 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
     }
   }
 
+  void navigateToLoginOtpScreen(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    auth.signinWithPhone(context, selectedPhoneCode, phoneValue);
+    // Navigator.pushNamed(context, '/login-get-otp',
+    //     arguments: {'countryCode': selectedPhoneCode, 'phone': phoneValue});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -480,7 +490,9 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
                     Visibility(
                       visible: isPhoneInputValid(phoneValue),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          navigateToLoginOtpScreen(context);
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(12),
                           elevation: 0,
@@ -547,49 +559,6 @@ class SignupWithGoogleButtonWidget extends StatelessWidget {
             color: Colors.black,
           )
           // const Icon(Icons.flutter_dash),
-        ],
-      ),
-    );
-  }
-}
-
-class Footer extends StatelessWidget {
-  const Footer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "By proceeding, you agree to our ",
-                style: GoogleFonts.montserrat(),
-              ),
-              Text(
-                "Terms",
-                style: GoogleFonts.montserrat(
-                  textStyle: const TextStyle(
-                    color: Colors.red,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            "and Conditions & Privacy Policy.",
-            style: GoogleFonts.montserrat(
-              textStyle: const TextStyle(
-                color: Colors.red,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:login_screen_2/components/loading_overlay.dart';
 import 'package:login_screen_2/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../components/custom_divider.dart';
 import '../components/login_screen_footer.dart';
 import '../components/rounded_border_on_some_sides_widget.dart';
 
@@ -25,293 +27,118 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
-
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Container(
-              height: screenHeight,
-              // decoration: const BoxDecoration(color: Colors.yellow),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, top: 40),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Welcome to",
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(fontSize: 30),
-                            fontWeight: FontWeight.w600,
+    final auth = Provider.of<AuthProvider>(context, listen: true);
+    return LoadingOverlay(
+      isLoading: auth.isLoading,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Container(
+                height: screenHeight,
+                // decoration: const BoxDecoration(color: Colors.yellow),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, top: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome to",
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(fontSize: 30),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Untitled",
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(fontSize: 30),
-                            fontWeight: FontWeight.w600,
+                          Text(
+                            "Untitled",
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(fontSize: 30),
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        PhoneLoginForm(phoneNumberFormKey),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   crossAxisAlignment: CrossAxisAlignment.end,
-                        //   children: [
-                        //     // Text("hello"),
-                        //     Expanded(
-                        //       flex: 4,
-                        //       child: CustomInput(phoneNumberFormKey),
-                        //     ),
-                        //     Expanded(
-                        //       flex: 1,
-                        //       child: ElevatedButton(
-                        //         onPressed: () {},
-                        //         style: ElevatedButton.styleFrom(
-                        //           // padding: const EdgeInsets.all(10),
-                        //           elevation: 0,
-                        //           backgroundColor:
-                        //               const Color.fromRGBO(58, 100, 61, 1),
-                        //           foregroundColor:
-                        //               const Color.fromRGBO(214, 248, 184, 1),
-                        //           shape: const RoundedRectangleBorder(
-                        //             borderRadius: BorderRadius.only(
-                        //               topRight: Radius.circular(10),
-                        //               bottomRight: Radius.circular(10),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //         child: const Icon(
-                        //           Icons.arrow_forward_rounded,
-                        //           size: 30,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            const CustomDivider(
-                              colors: [
-                                Color.fromRGBO(0, 0, 0, 0),
-                                Color.fromRGBO(0, 0, 0, 1),
-                                Color.fromRGBO(0, 0, 0, 0)
-                              ],
-                              thickness: 1,
-                            ),
-                            Container(
-                              width: 30,
-                              decoration:
-                                  const BoxDecoration(color: Colors.white),
-                              child: const Center(
-                                child: Text(
-                                  "Or",
-                                ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          PhoneLoginForm(phoneNumberFormKey),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: [
+                              const CustomDivider(
+                                colors: [
+                                  Color.fromRGBO(0, 0, 0, 0),
+                                  Color.fromRGBO(0, 0, 0, 1),
+                                  Color.fromRGBO(0, 0, 0, 0)
+                                ],
+                                thickness: 1,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const SignupWithGoogleButtonWidget(),
-                        const SizedBox(
-                          height: 60,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () => _navigateToHome(context),
-                              child: Text(
-                                "Skip Sign in",
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w300,
+                              Container(
+                                width: 30,
+                                decoration:
+                                    const BoxDecoration(color: Colors.white),
+                                child: const Center(
+                                  child: Text(
+                                    "Or",
                                   ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const SignupWithGoogleButtonWidget(),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () => _navigateToHome(context),
+                                child: Text(
+                                  "Skip Sign in",
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
-                    child: LoginScreenFooter(),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomDivider extends StatelessWidget {
-  final double thickness;
-  final List<Color> colors;
-
-  const CustomDivider(
-      {super.key, required this.thickness, required this.colors});
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: thickness,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: colors,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomInput extends StatefulWidget {
-  const CustomInput(this.formKey, {super.key});
-
-  final GlobalKey<FormState> formKey;
-
-  @override
-  State<CustomInput> createState() => _CustomInputState();
-}
-
-class _CustomInputState extends State<CustomInput> {
-  String phoneValue = "";
-  static const int maxPhoneLength = 10;
-
-  bool isPhoneInputValid(String val) {
-    if (!RegExp(r'\d').hasMatch(val) || val.length > maxPhoneLength) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // decoration: const BoxDecoration(color: Colors.black),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Phone Number: $phoneValue',
-            style: const TextStyle(
-              color: Color.fromRGBO(102, 112, 133, 1),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(249, 249, 250, 1),
-              border: Border.all(
-                color: const Color.fromRGBO(242, 244, 247, 1),
-                width: 3,
-              ),
-              // border: Border(
-              //   top: BorderSide(
-              //     width: 3.0, color: Colors.red,
-              //     // color: Color.fromRGBO(242, 244, 247, 1),
-              //   ),
-              //   left: BorderSide(
-              //     width: 1.0,
-              //     color: Color.fromRGBO(242, 244, 247, 1),
-              //   ),
-              //   bottom: BorderSide(
-              //     width: 1.0,
-              //     color: Color.fromRGBO(242, 244, 247, 1),
-              //   ),
-              //   right: BorderSide.none,
-              // ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Form(
-                key: widget.formKey,
-                child: TextFormField(
-                  maxLength: 10,
-                  style: GoogleFonts.montserrat(
-                    textStyle: const TextStyle(
-                      color: Color.fromRGBO(102, 112, 133, 1),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                    ),
-                  ),
-                  autofocus: true,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "132-456-7890",
-                    hintStyle: TextStyle(
-                      color: Color.fromRGBO(102, 112, 133, 0.5),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                    ),
-                  ),
-                  validator: (value) {
-                    return null;
-                    // if (value!.isEmpty ||
-                    //     !RegExp(r'\d{10}').hasMatch(value)) {
-                    //   return 'Please enter valid phone number';
-                    // }
-                    // return null;
-                  },
-                  onChanged: (value) {
-                    if (isPhoneInputValid(value)) {
-                      setState(() {
-                        phoneValue = value;
-                      });
-                    } else {
-                      print("input is invalid");
-                    }
-                    // if (widget.formKey.currentState!.validate()) {
-                    //   print("form is valid");
-                    // } else {
-                    //   print("form is not valid");
-                    // }
-                    // if(formKey.is)
-                    // print(value);
-                  },
+                    const Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
+                      child: LoginScreenFooter(),
+                    )
+                  ],
                 ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -340,15 +167,9 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
     }
   }
 
-  void navigateToLoginOtpScreen(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-    auth.signinWithPhone(context, selectedPhoneCode, phoneValue);
-    // Navigator.pushNamed(context, '/login-get-otp',
-    //     arguments: {'countryCode': selectedPhoneCode, 'phone': phoneValue});
-  }
-
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     return Container(
       // decoration: const BoxDecoration(color: Colors.black),
       child: Column(
@@ -367,13 +188,6 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
             children: [
               Expanded(
                 flex: 1,
-                // child:
-                // ClipRRect(
-                //   borderRadius: const BorderRadius.only(
-                //     topLeft: Radius.circular(10),
-                //     bottomLeft: Radius.circular(10),
-                //   ),
-
                 child: RoundedBorderOnSomeSidesWidget(
                   borderColor: const Color.fromRGBO(242, 244, 247, 1),
                   borderRadius: 10,
@@ -491,7 +305,13 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
                       visible: isPhoneInputValid(phoneValue),
                       child: ElevatedButton(
                         onPressed: () {
-                          navigateToLoginOtpScreen(context);
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          try {
+                            auth.signinWithPhone(
+                                context, selectedPhoneCode, phoneValue, () {});
+                          } catch (e) {
+                            print("error in login:${e.toString()}");
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(12),

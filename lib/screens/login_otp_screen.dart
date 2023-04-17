@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:login_screen_2/screens/home_screen.dart';
+import 'package:login_screen_2/screens/new_user_details_screen.dart';
+import 'package:login_screen_2/utils/utils.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 import '../components/login_screen_footer.dart';
@@ -20,7 +24,7 @@ class LoginOtpScreen extends StatefulWidget {
 
 class _LoginOtpScreenState extends State<LoginOtpScreen> {
   static const int otpLen = 6;
-  int resendOtpTimeInSeconds = 5;
+  int resendOtpTimeInSeconds = 30;
   late Timer interval;
   int remainingResendOtpTimeInSeconds = 0;
   _LoginOtpScreenState() {
@@ -47,8 +51,28 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    interval.cancel();
+    super.dispose();
+  }
+
   void _navigateToLoginScreen(BuildContext context) {
     Navigator.pushNamed(context, "/login");
+  }
+
+  void _navigateToHomeScreen(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        ((route) => false));
+  }
+
+  void _navigateToEnterNewUserDetailsScreen(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => NewUserDetailsScreen()),
+        ((route) => false));
   }
 
   void restartInterval() {
@@ -70,6 +94,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: true);
     // final args =
     //     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     // final countryCode = args['countryCode'];
@@ -124,10 +149,57 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                         const SizedBox(
                           height: 0,
                         ),
-                        _PhoneOtpForm(
-                          formKeys: phoneOtpFormKeys,
-                          otpLen: otpLen,
+                        Pinput(
+                          enabled: remainingResendOtpTimeInSeconds > 0,
+                          autofocus: true,
+                          length: 6,
+                          onCompleted: (value) {
+                            auth.verifyOtp(
+                              context: context,
+                              verificationId: widget.verificationId,
+                              userOtp: value,
+                              onSuccess: () {
+                                auth
+                                    .checkExistingUser()
+                                    .then((doesExist) async {
+                                  if (doesExist) {
+                                    _navigateToHomeScreen(context);
+                                    // TODO: NAVIGATE TO PROFILE PAGE
+                                  } else {
+                                    _navigateToEnterNewUserDetailsScreen(
+                                        context);
+                                  }
+                                }).catchError((e) {
+                                  showSnackBar(context, e.toString());
+                                });
+                              },
+                            );
+                          },
+                          defaultPinTheme: PinTheme(
+                            width: 47,
+                            height: 57,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromRGBO(242, 244, 247, 1),
+                                width: 3,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color.fromRGBO(247, 247, 248, 1),
+                            ),
+                            textStyle: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                color: Color.fromRGBO(102, 112, 133, 1),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
                         ),
+                        // FocusNodeExample(),
+                        // _PhoneOtpForm(
+                        //   formKeys: phoneOtpFormKeys,
+                        //   otpLen: otpLen,
+                        // ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -192,9 +264,22 @@ class _PhoneOtpFormState extends State<_PhoneOtpForm> {
   }
   List<String> otpVal = [];
   bool otpFetchedFromSms = false;
+  FocusNode? currentFocusNode;
+
+  @override
+  void initState() {
+    // super.initState();
+    // currentFocusNode = widget.focusNodes[0];
+    // try {
+    //   currentFocusNode?.requestFocus();
+    // } catch (e) {
+    //   print(e.toString());
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: true);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -280,7 +365,12 @@ class _PhoneOtpFormState extends State<_PhoneOtpForm> {
                               }
                             } else {
                               if (item.key < widget.otpLen - 1) {
-                                widget.focusNodes[item.key + 1].requestFocus();
+                                FocusScope.of(item.value.currentContext!)
+                                    .unfocus();
+                                Timer(Duration(seconds: 2), () {
+                                  widget.focusNodes[item.key + 1]
+                                      .requestFocus();
+                                });
                                 // widget.focusNodes[item.key + 1].requestFocus();
                               } else {
                                 FocusManager.instance.primaryFocus?.unfocus();
@@ -336,17 +426,18 @@ class ResendOtpButton extends StatelessWidget {
   final Function restartTimerHandler;
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-    return ElevatedButton(
-      onPressed: () {
-        auth.signinWithPhone(context, countryCode, phone);
-        if (!auth.isLoading) {
-          restartTimerHandler();
-        }
-      },
+    final auth = Provider.of<AuthProvider>(context, listen: true);
+    return OutlinedButton(
+      onPressed: auth.isLoading || remainingTimeInSec > 0
+          ? null
+          : () {
+              auth.signinWithPhone(
+                  context, countryCode, phone, restartTimerHandler);
+              if (!auth.isLoading) {
+                restartTimerHandler();
+              }
+            },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-        elevation: 0,
         splashFactory: NoSplash.splashFactory,
         padding: const EdgeInsets.symmetric(vertical: 14),
         shape: RoundedRectangleBorder(
@@ -356,61 +447,85 @@ class ResendOtpButton extends StatelessWidget {
             width: 3,
           ),
         ),
-      ),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        enableFeedback: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Row(
-                children: [
-                  if (remainingTimeInSec == 0)
-                    Center(
-                      child: auth.isLoading
-                          ? Text(
-                              "Resend OTP",
-                              style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(104, 172, 108, 1),
-                                ),
-                              ),
-                            )
-                          : const CircularProgressIndicator(),
-                    ),
-                  if (remainingTimeInSec > 0) ...[
-                    Text(
-                      "(",
-                      style: GoogleFonts.montserrat(
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromRGBO(104, 172, 108, 1),
-                        ),
-                      ),
-                    ),
-                    TimerWidget(timeInSeconds: remainingTimeInSec),
-                    Text(
-                      ")",
-                      style: GoogleFonts.montserrat(
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromRGBO(104, 172, 108, 1),
-                        ),
-                      ),
-                    ),
-                  ]
-                ],
-              ),
-            )
-          ],
+      ).merge(
+        ButtonStyle(
+          elevation: MaterialStateProperty.resolveWith<double>(
+            (Set<MaterialState> states) {
+              // if the button is pressed the elevation is 10.0, if not
+              // it is 5.0
+              if (states.contains(MaterialState.pressed)) return 0;
+              return 0;
+            },
+          ),
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              // if the button is pressed the elevation is 10.0, if not
+              // it is 5.0
+              if (states.contains(MaterialState.pressed)) {
+                return const Color.fromRGBO(0, 0, 0, 0.09);
+              } else if (states.contains(MaterialState.disabled)) {
+                return const Color.fromRGBO(0, 0, 0, 0.05);
+              }
+              return const Color.fromRGBO(255, 255, 255, 1);
+            },
+          ),
         ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Row(
+              children: [
+                if (remainingTimeInSec == 0)
+                  Center(
+                    child: auth.isLoading
+                        ? Container(
+                            height: 20,
+                            width: 20,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : Text(
+                            "Resend OTP",
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromRGBO(104, 172, 108, 1),
+                              ),
+                            ),
+                          ),
+                  ),
+                if (remainingTimeInSec > 0) ...[
+                  Text(
+                    "(",
+                    style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromRGBO(104, 172, 108, 1),
+                      ),
+                    ),
+                  ),
+                  TimerWidget(timeInSeconds: remainingTimeInSec),
+                  Text(
+                    ")",
+                    style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromRGBO(104, 172, 108, 1),
+                      ),
+                    ),
+                  ),
+                ]
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

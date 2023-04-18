@@ -8,6 +8,7 @@ import 'package:login_screen_2/utils/utils.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
+import '../components/loading_overlay.dart';
 import '../components/login_screen_footer.dart';
 import '../providers/auth_provider.dart';
 
@@ -101,139 +102,145 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     // final phone = args['phone'];
     final completePhoneNumber = "${widget.countryCode} ${widget.phone}";
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Container(
-              height: screenHeight,
-              // decoration: const BoxDecoration(color: Colors.yellow),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, top: 40),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "An OTP was sent to",
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(fontSize: 30),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          completePhoneNumber,
-                          style: GoogleFonts.montserrat(
+    return LoadingOverlay(
+      isLoading: auth.isLoading,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Container(
+                height: screenHeight,
+                // decoration: const BoxDecoration(color: Colors.yellow),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, top: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "An OTP was sent to",
+                            style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(fontSize: 30),
                               fontWeight: FontWeight.w600,
-                              color: const Color.fromRGBO(104, 172, 108, 1)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 0,
-                        ),
-                        Pinput(
-                          enabled: remainingResendOtpTimeInSeconds > 0,
-                          autofocus: true,
-                          length: 6,
-                          onCompleted: (value) {
-                            auth.verifyOtp(
-                              context: context,
-                              verificationId: widget.verificationId,
-                              userOtp: value,
-                              onSuccess: () {
-                                auth
-                                    .checkExistingUser()
-                                    .then((doesExist) async {
-                                  if (doesExist) {
-                                    _navigateToHomeScreen(context);
-                                    // TODO: NAVIGATE TO PROFILE PAGE
-                                  } else {
-                                    _navigateToEnterNewUserDetailsScreen(
-                                        context);
-                                  }
-                                }).catchError((e) {
-                                  showSnackBar(context, e.toString());
-                                });
-                              },
-                            );
-                          },
-                          defaultPinTheme: PinTheme(
-                            width: 47,
-                            height: 57,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromRGBO(242, 244, 247, 1),
-                                width: 3,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color.fromRGBO(247, 247, 248, 1),
                             ),
-                            textStyle: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Color.fromRGBO(102, 112, 133, 1),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            completePhoneNumber,
+                            style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(fontSize: 30),
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromRGBO(104, 172, 108, 1)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 0,
+                          ),
+                          Pinput(
+                            enabled: remainingResendOtpTimeInSeconds > 0,
+                            autofocus: true,
+                            length: 6,
+                            onCompleted: (value) {
+                              auth.verifyOtp(
+                                context: context,
+                                verificationId: widget.verificationId,
+                                userOtp: value,
+                                onSuccess: () {
+                                  auth
+                                      .checkExistingUser()
+                                      .then((doesExist) async {
+                                    if (doesExist) {
+                                      _navigateToHomeScreen(context);
+                                      // TODO: NAVIGATE TO PROFILE PAGE
+                                    } else {
+                                      _navigateToEnterNewUserDetailsScreen(
+                                          context);
+                                    }
+                                  }).catchError((e) {
+                                    showSnackBar(context, e.toString());
+                                  });
+                                },
+                              );
+                            },
+                            defaultPinTheme: PinTheme(
+                              width: 47,
+                              height: 57,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color.fromRGBO(242, 244, 247, 1),
+                                  width: 3,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color.fromRGBO(247, 247, 248, 1),
+                              ),
+                              textStyle: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Color.fromRGBO(102, 112, 133, 1),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        // FocusNodeExample(),
-                        // _PhoneOtpForm(
-                        //   formKeys: phoneOtpFormKeys,
-                        //   otpLen: otpLen,
-                        // ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ResendOtpButton(remainingResendOtpTimeInSeconds,
-                            widget.countryCode, widget.phone, restartInterval),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () => {_navigateToLoginScreen(context)},
-                              child: Text(
-                                "Change Number",
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromRGBO(104, 172, 108, 1),
+                          // FocusNodeExample(),
+                          // _PhoneOtpForm(
+                          //   formKeys: phoneOtpFormKeys,
+                          //   otpLen: otpLen,
+                          // ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          ResendOtpButton(
+                              remainingResendOtpTimeInSeconds,
+                              widget.countryCode,
+                              widget.phone,
+                              restartInterval),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () => {_navigateToLoginScreen(context)},
+                                child: Text(
+                                  "Change Number",
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color.fromRGBO(104, 172, 108, 1),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
-                    child: LoginScreenFooter(),
-                  )
-                ],
+                    const Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
+                      child: LoginScreenFooter(),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

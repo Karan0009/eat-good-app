@@ -130,7 +130,7 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                           ),
                         ),
                         autofocus: true,
-                        keyboardType: TextInputType.phone,
+                        keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Sunita",
@@ -212,7 +212,7 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                             fontSize: 20,
                           ),
                         ),
-                        keyboardType: TextInputType.phone,
+                        keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Devi",

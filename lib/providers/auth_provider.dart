@@ -32,12 +32,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void checkSignIn() async {
-    _isLoading = true;
-    notifyListeners();
-    final SharedPreferences sp = await SharedPreferences.getInstance();
-    _isSignedIn = sp.getBool("is_signed_in") ?? false;
-    _isLoading = false;
-    notifyListeners();
+    try {
+      _isLoading = true;
+      notifyListeners();
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      _isSignedIn = sp.getBool("is_signed_in") ?? false;
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   void signinWithPhone(BuildContext context, String countryCode,

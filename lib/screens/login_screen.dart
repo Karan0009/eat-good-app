@@ -237,7 +237,7 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
                   children: [
                     Positioned(
                       child: Container(
-                        padding: const EdgeInsets.only(left: 20.0),
+                        padding: const EdgeInsets.only(left: 10.0),
                         decoration: BoxDecoration(
                           color: const Color.fromRGBO(249, 249, 250, 1),
                           border: Border.all(
@@ -264,7 +264,7 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
                             keyboardType: TextInputType.phone,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintText: "132-456-7890",
+                              hintText: "123-456-7890",
                               counterText: "",
                               hintStyle: TextStyle(
                                 color: Color.fromRGBO(102, 112, 133, 0.5),

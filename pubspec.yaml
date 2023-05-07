@@ -45,6 +45,14 @@ dependencies:
   pinput: ^2.2.21
   flutter_native_splash: ^2.2.18
 
+  # for clean architecture
+  get_it: ^7.3.0
+  flutter_bloc: ^8.1.2
+  equatable: ^2.0.5
+  dartz: ^0.10.1
+  connectivity: ^3.0.6
+  http: ^0.13.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

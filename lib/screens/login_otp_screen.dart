@@ -28,6 +28,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   int resendOtpTimeInSeconds = 30;
   late Timer interval;
   int remainingResendOtpTimeInSeconds = 0;
+
   _LoginOtpScreenState() {
     for (int i = 0; i < otpLen; ++i) {
       phoneOtpFormKeys.add(GlobalKey<FormState>());
@@ -65,7 +66,11 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   void _navigateToHomeScreen(BuildContext context) {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(
+            initalIndex: 0,
+          ),
+        ),
         ((route) => false));
   }
 
@@ -155,9 +160,12 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                           Pinput(
                             enabled: remainingResendOtpTimeInSeconds > 0,
                             autofocus: true,
+                            controller: auth.pinController,
                             length: 6,
+                            androidSmsAutofillMethod:
+                                AndroidSmsAutofillMethod.none,
                             onCompleted: (value) {
-                              auth.verifyOtp(
+                              auth.verifyOtpAndSaveUser(
                                 context: context,
                                 verificationId: widget.verificationId,
                                 userOtp: value,

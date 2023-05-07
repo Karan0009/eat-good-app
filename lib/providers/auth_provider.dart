@@ -9,51 +9,91 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_model.dart';
 
-class AuthProvider extends ChangeNotifier {
-  bool _isSignedIn = false;
-  bool get isSignedIn => _isSignedIn;
+enum AuthStatus {
+  uninitialized,
+  authenticated,
+  authenticating,
+  unauthenticated
+}
 
+class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  AuthStatus _authStatus = AuthStatus.uninitialized;
+  AuthStatus get authStatus => _authStatus;
 
   String _uid = "";
   String get uid => _uid;
 
+  UserModel _user = UserModel(
+      firstName: "", createdAt: "", lastName: "", phoneNumber: "", uid: "");
+  UserModel get user => _user;
+
+  final TextEditingController _pinController = TextEditingController();
+  TextEditingController get pinController => _pinController;
+
   /* CONSTANT KEYS FOR SHARED PREFERENCE */
   final String _userDataKey = "userdata";
-  final String _isSignedInKey = "is_signed_in";
   final String _usersCollectionName = "users";
-
+  final String _isSignedInKey = "is_signed_in";
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   AuthProvider() {
+    // _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
     checkSignIn();
   }
 
   void checkSignIn() async {
+    _isLoading = true;
+    notifyListeners();
     try {
-      _isLoading = true;
-      notifyListeners();
       final SharedPreferences sp = await SharedPreferences.getInstance();
-      _isSignedIn = sp.getBool("is_signed_in") ?? false;
+      String userData = sp.getString(_userDataKey) ?? "";
+      if (userData != "") {
+        final userData = jsonDecode(sp.getString(_userDataKey)!);
+        _uid = userData["uid"];
+        _user.uid = _uid;
+        _user.firstName = userData["firstName"];
+        _user.lastName = userData["lastName"];
+        _user.phoneNumber = userData["phoneNumber"];
+        _user.createdAt = userData["createdAt"];
+        _authStatus = AuthStatus.authenticated;
+        // await _firebaseAuth.signInWithCustomToken(_uid);
+      } else {
+        _uid = "";
+        _authStatus = AuthStatus.unauthenticated;
+      }
       _isLoading = false;
       notifyListeners();
     } catch (e) {
+      _isLoading = false;
+      notifyListeners();
       print(e.toString());
     }
   }
 
+  void _onAuthStateChanged(User? user) {
+    if (user == null) {
+      _authStatus = AuthStatus.unauthenticated;
+    } else {
+      _authStatus = AuthStatus.authenticated;
+    }
+    notifyListeners();
+  }
+
   void signinWithPhone(BuildContext context, String countryCode,
       String phoneNumber, Function restartOtpTimerHandler) async {
+    _isLoading = true;
+    notifyListeners();
     try {
-      _isLoading = true;
-      notifyListeners();
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: "$countryCode$phoneNumber",
-        verificationCompleted: (phoneAuthCredential) async {
+        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
           _isLoading = false;
           notifyListeners();
+          pinController.text = phoneAuthCredential.smsCode.toString();
           await _firebaseAuth.signInWithCredential(phoneAuthCredential);
         },
         verificationFailed: (error) {
@@ -79,7 +119,49 @@ class AuthProvider extends ChangeNotifier {
         },
       );
     } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      notifyListeners();
       showSnackBar(context, e.message.toString());
+    }
+  }
+
+  void verifyOtpAndSaveUser(
+      {required BuildContext context,
+      required String verificationId,
+      required String userOtp,
+      required Function onSuccess}) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      PhoneAuthCredential creds = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: userOtp);
+      User? user = (await _firebaseAuth.signInWithCredential(creds)).user;
+      if (user != null) {
+        _uid = user.uid;
+        bool doesUserExists = await checkExistingUser();
+        if (doesUserExists) {
+          UserModel? user = await _getDataOfUserByUid(uid);
+          if (user == null) {
+            throw Exception("user cannot be found");
+          }
+          bool isUserDataSaved = await saveUserDataInSharedPref(user);
+          if (!isUserDataSaved) {
+            throw Exception("error in saving user data");
+          }
+          _authStatus = AuthStatus.authenticated;
+        }
+        onSuccess();
+      }
+      _isLoading = false;
+      notifyListeners();
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      showSnackBar(context, e.message.toString());
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      showSnackBar(context, e.toString());
     }
   }
 
@@ -97,7 +179,6 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       if (user != null) {
-        _uid = user.uid;
         onSuccess();
       }
     } on FirebaseAuthException catch (e) {
@@ -122,10 +203,11 @@ class AuthProvider extends ChangeNotifier {
     return false;
   }
 
-  void saveUserDataToFirebase(
-      {required BuildContext context,
-      required UserModel user,
-      required Function onSuccess}) async {
+  void saveUserDataToFirebase({
+    required BuildContext context,
+    required UserModel user,
+    required Function onSuccess,
+  }) async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -140,10 +222,7 @@ class AuthProvider extends ChangeNotifier {
       if (!isUserDataSaved) {
         throw Exception("could not save data in shared pref");
       }
-      bool isSignedInValueSet = await setIsSignedIn(true);
-      if (!isSignedInValueSet) {
-        throw Exception("could not save data in shared pref");
-      }
+      _authStatus = AuthStatus.authenticated;
 
       _isLoading = false;
       notifyListeners();
@@ -163,19 +242,65 @@ class AuthProvider extends ChangeNotifier {
     try {
       final SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString(_userDataKey, jsonEncode(user.toMap()));
+      _user = user;
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  Future<bool> setIsSignedIn(bool value) async {
+  Future<bool> removeUserDataFromSharedPref() async {
     try {
       final SharedPreferences sp = await SharedPreferences.getInstance();
-      sp.setBool(_isSignedInKey, value);
+      sp.setString(_userDataKey, "");
       return true;
     } catch (e) {
       return false;
     }
   }
+
+  Future<UserModel?> _getDataOfUserByUid(String uid) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      var snapshot = await _firebaseFirestore
+          .collection(_usersCollectionName)
+          .doc(uid)
+          .get();
+      if (snapshot.exists) {
+        _isLoading = false;
+        notifyListeners();
+        return UserModel.fromMap(snapshot.data()!);
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return null;
+      }
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future signOut() async {
+    await _firebaseAuth.signOut();
+    _authStatus = AuthStatus.unauthenticated;
+    _uid = "";
+    _user = UserModel(
+        firstName: "", createdAt: "", lastName: "", phoneNumber: "", uid: "");
+    await removeUserDataFromSharedPref();
+    notifyListeners();
+    return Future.delayed(Duration.zero);
+  }
+
+  // Future<bool> setIsSignedIn(bool value) async {
+  //   try {
+  //     final SharedPreferences sp = await SharedPreferences.getInstance();
+  //     sp.setBool(_isSignedInKey, value);
+  //     return true;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
 }

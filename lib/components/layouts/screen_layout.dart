@@ -6,10 +6,14 @@ class ScreenLayout extends StatelessWidget {
   final bool isLoading;
   final double screenHeight;
   final Widget child;
+  final AppBar? appBar;
+  final BottomNavigationBar? bottomNavigationBar;
   const ScreenLayout(
       {required this.isLoading,
       required this.screenHeight,
       required this.child,
+      this.appBar,
+      this.bottomNavigationBar,
       super.key});
 
   @override
@@ -22,6 +26,8 @@ class ScreenLayout extends StatelessWidget {
         },
         child: Scaffold(
           backgroundColor: Colors.white,
+          appBar: appBar,
+          bottomNavigationBar: bottomNavigationBar,
           body: SafeArea(
             child: SingleChildScrollView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,

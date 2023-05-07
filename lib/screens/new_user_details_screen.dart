@@ -25,10 +25,14 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
     lastName = "";
   }
 
-  void navigateToProfileScreen() {
+  void navigateToProfilePage() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(
+            initalIndex: 1,
+          ),
+        ),
         (route) => false);
   }
 
@@ -276,9 +280,9 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                               createdAt: "",
                               uid: ""),
                           onSuccess: () {
-                            navigateToProfileScreen();
+                            navigateToProfilePage();
                           });
-                      // try {
+                      // try
                       //   auth.signinWithPhone(
                       //       context, selectedPhoneCode, phoneValue, () {});
                       // } catch (e) {

@@ -46,12 +46,15 @@ dependencies:
   flutter_native_splash: ^2.2.18
 
   # for clean architecture
-  get_it: ^7.3.0
+  get_it: ^7.3.0 # for mvvm arch also
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
   dartz: ^0.10.1
   connectivity: ^3.0.6
   http: ^0.13.5
+  # for mvvm architecture
+  fluttertoast: ^8.2.1
+  another_flushbar: ^1.12.29
 
 dev_dependencies:
   flutter_test:

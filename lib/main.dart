@@ -2,18 +2,32 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:login_screen_2/providers/auth_provider.dart';
-import 'package:login_screen_2/providers/user_provider.dart';
-import 'package:login_screen_2/routes.dart';
-import 'package:provider/provider.dart';
+import 'package:login_screen_2/_mvvm_arch2/locator.dart';
+import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_screen_repo.dart';
+import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
+import 'package:login_screen_2/_mvvm_arch2/login_screen/views/login_screen.view.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
+import 'package:provider/provider.dart';
+
+import '_mvvm_arch2/shared/services/navigation_service.dart';
 
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => LoginViewModel(loginRepo: locator<LoginScreenRepo>()),
+        )
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -28,44 +42,56 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    // Timer(const Duration(seconds: 3), () {
-    //   FlutterNativeSplash.remove();
-    // });
+    Timer(const Duration(seconds: 3), () {
+      FlutterNativeSplash.remove();
+    });
+  }
+
+  final navigatorService = locator<NavigationService>();
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'My App',
+      debugShowCheckedModeBanner: false,
+      home: LoginScreen(),
+      onGenerateRoute: AppRoutes.onGenerateRoutes,
+    );
   }
 
   // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
-      child: Consumer(builder: (context, AuthProvider auth, _) {
-        switch (auth.authStatus) {
-          case AuthStatus.authenticated:
-            {
-              FlutterNativeSplash.remove();
-              return MaterialApp(
-                title: 'My App',
-                debugShowCheckedModeBanner: false,
-                initialRoute: "/home",
-                routes: routes,
-              );
-            }
-          case AuthStatus.unauthenticated:
-            {
-              FlutterNativeSplash.remove();
-              return MaterialApp(
-                title: 'My App',
-                debugShowCheckedModeBanner: false,
-                initialRoute: "/login",
-                routes: routes,
-              );
-            }
-          default:
-            return const CircularProgressIndicator();
-        }
-      }),
-    );
-  }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return ChangeNotifierProvider(
+  //     create: (_) => AuthProvider(),
+  //     child: Consumer(builder: (context, AuthProvider auth, _) {
+  //       switch (auth.authStatus) {
+  //         case AuthStatus.authenticated:
+  //           {
+  //             FlutterNativeSplash.remove();
+  //             return MaterialApp(
+  //               title: 'My App',
+  //               debugShowCheckedModeBanner: false,
+  //               initialRoute: "/home",
+  //               routes: routes,
+  //             );
+  //           }
+  //         case AuthStatus.unauthenticated:
+  //           {
+  //             FlutterNativeSplash.remove();
+  //             return MaterialApp(
+  //               title: 'My App',
+  //               debugShowCheckedModeBanner: false,
+  //               initialRoute: "/login",
+  //               routes: routes,
+  //             );
+  //           }
+  //         default:
+  //           return const CircularProgressIndicator();
+  //       }
+  //     }),
+  //   );
+  // }
 }
 
 // return MultiProvider(

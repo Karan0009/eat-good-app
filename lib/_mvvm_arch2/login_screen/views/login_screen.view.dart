@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
-import 'package:login_screen_2/components/loading_overlay.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/components/loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/components/custom_divider/custom_divider.dart';

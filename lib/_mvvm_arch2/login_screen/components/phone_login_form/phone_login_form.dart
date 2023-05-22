@@ -167,6 +167,7 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         try {
+                          vm.getOtpHandler(context, () {});
                           // auth.signinWithPhone(
                           //     context, selectedPhoneCode, phoneValue, () {});
                         } catch (e) {

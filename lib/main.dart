@@ -12,12 +12,15 @@ import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
 import 'package:provider/provider.dart';
 
 import '_mvvm_arch2/shared/services/navigation_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
   var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [

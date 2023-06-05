@@ -12,4 +12,8 @@ class PhoneDetails {
   Map<String, dynamic> toJson() {
     return {"phoneNumber": phoneNumber, "countryCode": countryCode};
   }
+
+  String getCompletePhoneNumber() {
+    return "$countryCode$phoneNumber";
+  }
 }

@@ -8,9 +8,12 @@ import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen
 import 'package:login_screen_2/_mvvm_arch2/login_screen/views/login_screen.view.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/providers/user_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
 import 'package:provider/provider.dart';
 
+import '_mvvm_arch2/home_screen/repositories/home_screen_repo.dart';
+import '_mvvm_arch2/home_screen/view_models/home_screen.viewmodel.dart';
 import '_mvvm_arch2/shared/services/navigation_service.dart';
 
 void main() async {
@@ -21,8 +24,16 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(
-          create: (_) => LoginViewModel(loginRepo: locator<LoginScreenRepo>()),
+          create: (_) => LoginViewModel(
+            loginRepo: locator<LoginScreenRepo>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomeViewModel(
+            homeRepo: locator<HomeScreenRepository>(),
+          ),
         )
       ],
       child: const MyApp(),
@@ -47,15 +58,16 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  final navigatorService = locator<NavigationService>();
+  final navService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'My App',
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: const LoginScreen(),
       onGenerateRoute: AppRoutes.onGenerateRoutes,
+      navigatorKey: navService.rootNavKey,
     );
   }
 

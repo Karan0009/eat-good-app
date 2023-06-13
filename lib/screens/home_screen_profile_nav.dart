@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:login_screen_2/components/layouts/page_layout.dart';
-import 'package:login_screen_2/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
+
+import '../_mvvm_arch2/shared/layouts/page_layout.dart';
+// import 'package:login_screen_2/providers/auth_provider.dart';
+// import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
-    final auth = Provider.of<AuthProvider>(context, listen: true);
+    // final auth = Provider.of<AuthProvider>(context, listen: true);
     return PageLayout(
       screenHeight: screenHeight,
       child: Column(
@@ -29,12 +30,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const Text("profile"),
           ElevatedButton(
               onPressed: () {
-                auth.signOut().then(
-                      (value) => Navigator.of(context).pushNamedAndRemoveUntil(
-                        "/login",
-                        (route) => false,
-                      ),
-                    );
+                // auth.signOut().then(
+                //       (value) => Navigator.of(context).pushNamedAndRemoveUntil(
+                //         "/login",
+                //         (route) => false,
+                //       ),
+                //     );
               },
               child: const Text("Sign out"))
         ],

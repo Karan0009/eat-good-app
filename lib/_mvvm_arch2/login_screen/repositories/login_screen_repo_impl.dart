@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/models/phone_details.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_screen_repo.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/models/user_model.dart';
 
 import '../../shared/config/firebase.dart';
 
@@ -63,12 +64,11 @@ class LoginScreenRepoImpl implements LoginScreenRepo {
     }
   }
 
+  @override
   Future<bool> checkExistingUser(String userId) async {
     try {
-      String? userCollectionName = FirebaseConfig.collectionNames["users"];
-      if (userCollectionName == null) {
-        throw Exception("collection could not be found");
-      }
+      String userCollectionName = FirebaseConfig.getCollectionName("users");
+
       DocumentSnapshot snapshot = await _firebaseFirestore
           .collection(userCollectionName)
           .doc(userId)
@@ -78,6 +78,51 @@ class LoginScreenRepoImpl implements LoginScreenRepo {
       }
       return false;
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> saveNewUserDataWithFirestore(CustomUser user) async {
+    try {
+      String userCollectionName = FirebaseConfig.getCollectionName("users");
+
+      if (user.phoneNumber != "" &&
+          user.firstName != "" &&
+          user.firebaseUser != null) {
+        final uid = user.firebaseUser?.uid;
+        await _firebaseFirestore
+            .collection(userCollectionName)
+            .doc(uid)
+            .set(user.toJson());
+        return true;
+      }
+      return false;
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUserById(String uid) async {
+    try {
+      String userCollectionName = FirebaseConfig.getCollectionName("users");
+
+      if (uid == "") {
+        throw Exception("uid cannot be empty");
+      }
+
+      DocumentSnapshot snapshot = await _firebaseFirestore
+          .collection(userCollectionName)
+          .doc(uid)
+          .get();
+      if (!snapshot.exists) {
+        throw Exception("user not found");
+      }
+
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      return data;
+    } catch (ex) {
       rethrow;
     }
   }

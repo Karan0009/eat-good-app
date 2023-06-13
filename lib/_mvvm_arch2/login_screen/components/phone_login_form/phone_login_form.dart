@@ -171,7 +171,7 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
                           // auth.signinWithPhone(
                           //     context, selectedPhoneCode, phoneValue, () {});
                         } catch (e) {
-                          print("error in login:${e.toString()}");
+                          // print("error in login:${e.toString()}");
                         }
                       },
                       style: ElevatedButton.styleFrom(

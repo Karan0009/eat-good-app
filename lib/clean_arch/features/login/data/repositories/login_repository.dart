@@ -8,14 +8,12 @@ class LoginRepository implements ILoginRepository {
   @override
   Future<Either<Failure, VerificationId>> getOtp(
       String countryCode, String phoneNumber) {
-    // TODO: implement getOtp
     throw UnimplementedError();
   }
 
   @override
   Future<Either<Failure, MyPhoneAuthCredentials>> verifyOtp(
       String verificationId, String otp) {
-    // TODO: implement verifyOtp
     throw UnimplementedError();
   }
 }

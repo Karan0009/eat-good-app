@@ -6,6 +6,7 @@ import 'package:login_screen_2/_mvvm_arch2/shared/models/user_model.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/view_models/loading.viewmodel.dart';
 
+import '../../home_screen/models/home_page_view_arguments.dart';
 import '../../shared/providers/user_provider.dart';
 import '../../shared/services/navigation_service.dart';
 import '../../shared/utils/utils.dart';
@@ -50,11 +51,9 @@ class LoginViewModel extends LoadingViewModel {
       }
     } on FirebaseAuthException catch (e) {
       isLoading = false;
-      notifyListeners();
       Utils.showSnackBar(context, e.message.toString());
     } catch (ex) {
       isLoading = false;
-      notifyListeners();
       Utils.showSnackBar(context, "Some error occured");
     }
   }
@@ -62,7 +61,6 @@ class LoginViewModel extends LoadingViewModel {
   Function verificationFailedHandler(BuildContext context) {
     return (FirebaseAuthException exception) {
       isLoading = false;
-      notifyListeners();
       Utils.showSnackBar(context, exception.message.toString());
     };
   }
@@ -70,7 +68,7 @@ class LoginViewModel extends LoadingViewModel {
   Function codeSentHandler(BuildContext context) {
     return (String verificationId) {
       isLoading = false;
-
+      resetOtpValue();
       _navService.nav.pushReplacement(
         MaterialPageRoute(
           builder: (context) => LoginOtpScreen(
@@ -97,9 +95,21 @@ class LoginViewModel extends LoadingViewModel {
   }
 
   skipSigninHandler(BuildContext context) {
-    try {} catch (ex) {
+    try {
+      navigateToHome();
+    } catch (ex) {
       Utils.showSnackBar(context, ex.toString());
     }
+  }
+
+  void navigateToHome() {
+    _navService.nav.pushNamedAndRemoveUntil(
+      NamedRoute.homeScreen,
+      (route) => false,
+      arguments: HomePageViewArguments(
+        initalIndex: 0,
+      ),
+    );
   }
 
   openTermsAndConditionsLinkHandler(BuildContext context) {
@@ -118,7 +128,6 @@ class LoginViewModel extends LoadingViewModel {
   //       .then((doesExist) async {
   //     if (doesExist) {
   //       _navigateToHomeScreen(context);
-  //       // TODO: NAVIGATE TO PROFILE PAGE
   //     } else {
   //       _navigateToEnterNewUserDetailsScreen(
   //           context);
@@ -127,6 +136,10 @@ class LoginViewModel extends LoadingViewModel {
   //     showSnackBar(context, e.toString());
   //   });
   // },
+
+  void resetOtpValue() {
+    pinController.text = "";
+  }
 
   void verifyOtpHandler(
       {required BuildContext context,
@@ -139,32 +152,105 @@ class LoginViewModel extends LoadingViewModel {
         throw Exception("no user found");
       }
       CustomUser loggedInUser = CustomUser(
-          phoneNumber: user.phoneNumber ?? "",
-          countryCode: "",
-          firebaseUser: user);
+        phoneNumber: user.phoneNumber ?? "",
+        countryCode: "",
+        firebaseUser: user,
+      );
       _userProvider.setLoggedInUser(loggedInUser);
       bool isExistingUser = await loginRepo.checkExistingUser(user.uid);
       if (isExistingUser) {
-        _navService.nav.pushNamedAndRemoveUntil(
-            NamedRoute.homeScreen, (route) => false,
-            arguments: {"initalIndex": 0});
+        final userData = await loginRepo.getUserById(user.uid);
+        _userProvider.setLoggedInUser(CustomUser.fromJson(userData));
+        final isUserSavedLocally =
+            await _userProvider.saveLoggedInUserLocally();
+        if (!isUserSavedLocally) {
+          throw Exception("Error in saving user");
+        } else {
+          _navService.nav.pushNamedAndRemoveUntil(
+            NamedRoute.homeScreen,
+            (route) => false,
+            arguments: HomePageViewArguments.fromJson({"initalIndex": 1}),
+          );
+        }
       } else {
-        // TODO: navigate to add details page
+        _navService.nav.pushNamedAndRemoveUntil(
+          NamedRoute.newUserDetailsScreen,
+          (route) => false,
+          arguments: {},
+        );
       }
       isLoading = false;
     } on FirebaseAuthException catch (e) {
       isLoading = false;
-      notifyListeners();
       Utils.showSnackBar(context, e.message.toString());
     } catch (ex) {
       isLoading = false;
-      notifyListeners();
       Utils.showSnackBar(context, "Some error occured");
     }
   }
 
   void changePhoneNumberHandler(BuildContext context) {
-    _navService.nav
-        .pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
+    _navService.nav.pushNamedAndRemoveUntil(
+      NamedRoute.loginScreen,
+      (route) => false,
+    );
+  }
+
+  void showChangePhoneNumberAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Do you want to change your phone number?"),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                _navService.nav.pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+              ),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              child: const Text('Change'),
+              onPressed: () {
+                changePhoneNumberHandler(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void newUserDetailsNextClickHandler(BuildContext context, String firstName,
+      {String? lastName}) async {
+    try {
+      isLoading = true;
+
+      _userProvider.setFirstName(firstName);
+      if (lastName != null) {
+        _userProvider.setLastName(lastName);
+      }
+
+      final isUserSavedLocally = await _userProvider.saveLoggedInUserLocally();
+      if (!isUserSavedLocally) {
+        throw Exception("Error in saving user data");
+      }
+      var user = _userProvider.user;
+      if (user != null) {
+        final isUserSaved = await loginRepo.saveNewUserDataWithFirestore(user);
+        if (isUserSaved) {
+          navigateToHome();
+        } else {
+          throw Exception("Error in creating your profile");
+        }
+      }
+      isLoading = false;
+    } catch (ex) {
+      isLoading = false;
+      Utils.showSnackBar(context, "Some error occured");
+    }
   }
 }

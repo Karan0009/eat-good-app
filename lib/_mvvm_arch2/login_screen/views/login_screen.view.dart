@@ -24,9 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   final phoneNumberFormKey = GlobalKey<FormState>();
-  void _navigateToHome(BuildContext context) {
-    Navigator.pushNamed(context, "/home");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap: () => _navigateToHome(context),
+                                onTap: () => vm.skipSigninHandler(context),
                                 child: Text(
                                   "Skip Sign in",
                                   style: GoogleFonts.montserrat(

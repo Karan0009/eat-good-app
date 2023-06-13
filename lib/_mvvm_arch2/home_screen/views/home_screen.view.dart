@@ -7,9 +7,11 @@ import 'package:login_screen_2/screens/home_screen_profile_nav.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/layouts/screen_layout.dart';
+import '../models/home_page_view_arguments.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final HomePageViewArguments data;
+  const HomeScreen({required this.data, super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedBottomNavBarIndex = 0;
-  dynamic arguments;
   final List<Widget> _widgetOptions = const [
     HomeNavHomeScreen(),
     ProfileScreen()
@@ -25,14 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    arguments = ModalRoute.of(context)?.settings.arguments;
-    selectedBottomNavBarIndex = arguments.initalIndex ?? 0;
+    selectedBottomNavBarIndex = widget.data.initalIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
     final vm = Provider.of<HomeViewModel>(context, listen: true);
+
     return ScreenLayout(
       isLoading: vm.isLoading,
       screenHeight: screenHeight,

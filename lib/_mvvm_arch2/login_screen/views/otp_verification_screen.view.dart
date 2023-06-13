@@ -3,13 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
-import 'package:login_screen_2/_mvvm_arch2/shared/services/navigation_service.dart';
-import 'package:login_screen_2/screens/home_screen.dart';
-import 'package:login_screen_2/screens/new_user_details_screen.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
-import '../../locator.dart';
 import '../../shared/components/loading_overlay/loading_overlay.dart';
 import '../../shared/components/login_screen_footer/login_screen_footer.dart';
 import '../components/resend_otp_button/resend_otp_button.dart';
@@ -60,25 +56,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     interval.cancel();
     // TODO: DISPOSE THE PINCONTROLLER
     super.dispose();
-  }
-
-  void _navigateToHomeScreen(BuildContext context) {
-    // Navigator.pushAndRemoveUntil(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => const HomeScreen(
-    //       initalIndex: 0,
-    //     ),
-    //   ),
-    //   ,
-    // );
-  }
-
-  void _navigateToEnterNewUserDetailsScreen(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => NewUserDetailsScreen()),
-        ((route) => false));
   }
 
   void restartInterval() {

@@ -131,12 +131,10 @@ class _PhoneOtpFormState extends State<_PhoneOtpForm> {
                                 // widget.focusNodes[item.key + 1].requestFocus();
                               } else {
                                 FocusManager.instance.primaryFocus?.unfocus();
-                                print("submit otp");
                               }
                             }
                             setState(() {
                               otpVal[item.key] = value;
-                              // phoneValue = value;
                             });
                           },
                         ),

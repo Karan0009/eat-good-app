@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:login_screen_2/components/layouts/page_layout.dart';
-import 'package:login_screen_2/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
+
+import '../_mvvm_arch2/locator.dart';
+import '../_mvvm_arch2/shared/layouts/page_layout.dart';
+import '../_mvvm_arch2/shared/providers/user_provider.dart';
+// import 'package:provider/provider.dart';
 
 class HomeNavHomeScreen extends StatefulWidget {
   const HomeNavHomeScreen({super.key});
@@ -20,12 +22,18 @@ class _HomeNavHomeScreenState extends State<HomeNavHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = locator<UserProvider>();
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
-    final auth = Provider.of<AuthProvider>(context, listen: true);
+    // final auth = Provider.of<AuthProvider>(context, listen: true);
     return PageLayout(
       screenHeight: screenHeight,
       child: Column(
-        children: const [Text("home screen")],
+        children: [
+          const Text("home screen"),
+          Text(userProvider.user?.firstName ?? ""),
+          Text(userProvider.user?.lastName ?? ""),
+          Text(userProvider.user?.firebaseUser?.phoneNumber ?? "")
+        ],
       ),
     );
   }

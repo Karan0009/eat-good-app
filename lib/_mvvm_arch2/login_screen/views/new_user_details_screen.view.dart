@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
-import 'package:login_screen_2/components/layouts/screen_layout.dart';
-import 'package:login_screen_2/screens/home_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../../shared/layouts/screen_layout.dart';
 
 class NewUserDetailsScreen extends StatefulWidget {
   final personlInfoFormKey = GlobalKey<FormState>();
@@ -21,17 +21,6 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
     super.initState();
     firstName = "";
     lastName = "";
-  }
-
-  void navigateToProfilePage() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(
-            initalIndex: 1,
-          ),
-        ),
-        (route) => false);
   }
 
   @override
@@ -55,18 +44,25 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.arrow_back_rounded,
-                      color: Color.fromRGBO(152, 162, 179, 1),
-                      size: 30,
+                    GestureDetector(
+                      child: const Icon(
+                        Icons.arrow_back_rounded,
+                        color: Color.fromRGBO(152, 162, 179, 1),
+                        size: 30,
+                      ),
+                      onTap: () {
+                        vm.showChangePhoneNumberAlert(context);
+                        // vm.changePhoneNumberHandler(context);
+                      },
                     ),
                     const SizedBox(width: 20),
                     Text(
                       "Complete your profile",
                       style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(fontSize: 24),
-                          fontWeight: FontWeight.w600,
-                          color: const Color.fromRGBO(52, 64, 84, 1)),
+                        textStyle: const TextStyle(fontSize: 24),
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromRGBO(52, 64, 84, 1),
+                      ),
                     )
                   ],
                 ),
@@ -269,23 +265,11 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       FocusManager.instance.primaryFocus?.unfocus();
-                      // auth.saveUserDataToFirebase(
-                      //     context: context,
-                      //     user: UserModel(
-                      //         firstName: firstName,
-                      //         lastName: lastName,
-                      //         phoneNumber: "",
-                      //         createdAt: "",
-                      //         uid: ""),
-                      //     onSuccess: () {
-                      //       navigateToProfilePage();
-                      //     });
-                      // try
-                      //   auth.signinWithPhone(
-                      //       context, selectedPhoneCode, phoneValue, () {});
-                      // } catch (e) {
-                      //   print("error in login:${e.toString()}");
-                      // }
+                      vm.newUserDetailsNextClickHandler(
+                        context,
+                        firstName,
+                        lastName: lastName,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(16),

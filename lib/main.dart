@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen_2/_mvvm_arch2/locator.dart';
@@ -10,6 +8,7 @@ import 'package:login_screen_2/_mvvm_arch2/login_screen/views/login_screen.view.
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/providers/user_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/view_models/app.viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '_mvvm_arch2/home_screen/repositories/home_screen_repo.dart';
@@ -24,6 +23,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AppViewModel()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(
@@ -52,9 +52,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    Timer(const Duration(seconds: 3), () {
+    final appVm = Provider.of<AppViewModel>(context, listen: false);
+    appVm.initializeData(context).then((value) {
       FlutterNativeSplash.remove();
+    }).catchError((err) {
+      // some error occured
     });
   }
 

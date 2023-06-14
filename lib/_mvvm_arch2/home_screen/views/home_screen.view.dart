@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:login_screen_2/_mvvm_arch2/home_screen/view_models/home_screen.viewmodel.dart';
+import 'package:login_screen_2/_mvvm_arch2/profile_screen/views/profile_screen.view.dart';
 import 'package:login_screen_2/screens/home_screen_home_nav.dart';
-import 'package:login_screen_2/screens/home_screen_profile_nav.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/layouts/screen_layout.dart';

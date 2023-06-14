@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login_screen_2/_mvvm_arch2/locator.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/models/phone_details.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_screen_repo.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/models/user_model.dart';
@@ -7,8 +8,8 @@ import 'package:login_screen_2/_mvvm_arch2/shared/models/user_model.dart';
 import '../../shared/config/firebase.dart';
 
 class LoginScreenRepoImpl implements LoginScreenRepo {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseAuth _firebaseAuth = locator<FirebaseAuth>();
+  final FirebaseFirestore _firebaseFirestore = locator<FirebaseFirestore>();
   late String _verificationId;
 
   LoginScreenRepoImpl();

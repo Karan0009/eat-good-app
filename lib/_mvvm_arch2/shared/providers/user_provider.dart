@@ -75,8 +75,19 @@ class UserProvider extends ChangeNotifier {
     } catch (ex) {
       _user = null;
       final SharedPreferences sp = await SharedPreferences.getInstance();
-      sp.remove(AppConstants.userInfoKey);
+      await sp.remove(AppConstants.userInfoKey);
       notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> removeLoggedInUser() async {
+    try {
+      _user = null;
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      await sp.remove(AppConstants.userInfoKey);
+      return true;
+    } catch (ex) {
       return false;
     }
   }

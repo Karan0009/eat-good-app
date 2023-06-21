@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:login_screen_2/_mvvm_arch2/locator.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_screen_repo.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:login_screen_2/_mvvm_arch2/profile_screen/view_models/profile.viewmodel.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/providers/user_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/services/app_localizations_service.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/view_models/app.viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +75,24 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App',
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('hi', 'IN'),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode &&
+              supportedLocale.countryCode == locale?.countryCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
       debugShowCheckedModeBanner: false,
       home: const LoginScreen(),
       onGenerateRoute: AppRoutes.onGenerateRoutes,

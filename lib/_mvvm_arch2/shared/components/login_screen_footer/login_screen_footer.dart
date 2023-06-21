@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/services/app_localizations_service.dart';
 
 class LoginScreenFooter extends StatelessWidget {
   const LoginScreenFooter({super.key});
@@ -15,11 +16,21 @@ class LoginScreenFooter extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "By proceeding, you agree to our ",
+                AppLocalizations.of(context)
+                    .translate("byProceddingYouAgreeToOur"),
                 style: GoogleFonts.montserrat(),
               ),
               Text(
-                "Terms",
+                ",",
+                style: GoogleFonts.montserrat(
+                  textStyle: const TextStyle(
+                    color: Colors.red,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              Text(
+                AppLocalizations.of(context).translate("terms"),
                 style: GoogleFonts.montserrat(
                   textStyle: const TextStyle(
                     color: Colors.red,
@@ -30,7 +41,8 @@ class LoginScreenFooter extends StatelessWidget {
             ],
           ),
           Text(
-            "and Conditions & Privacy Policy.",
+            AppLocalizations.of(context)
+                .translate("andConditionsAndPrivacyPolicy"),
             style: GoogleFonts.montserrat(
               textStyle: const TextStyle(
                 color: Colors.red,

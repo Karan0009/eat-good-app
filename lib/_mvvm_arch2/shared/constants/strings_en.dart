@@ -1,0 +1,3 @@
+class StringsEn {
+  StringsEn._();
+}

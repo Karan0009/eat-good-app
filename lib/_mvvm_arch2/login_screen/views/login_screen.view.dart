@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/components/loading_overlay/loading_overlay.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/services/app_localizations_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/components/custom_divider/custom_divider.dart';
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Welcome to",
+                            AppLocalizations.of(context).translate("welcomeTo"),
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(fontSize: 30),
                               fontWeight: FontWeight.w600,
@@ -94,9 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 30,
                                 decoration:
                                     const BoxDecoration(color: Colors.white),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
-                                    "Or",
+                                    AppLocalizations.of(context)
+                                        .translate("or"),
                                   ),
                                 ),
                               ),
@@ -115,7 +117,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               GestureDetector(
                                 onTap: () => vm.skipSigninHandler(context),
                                 child: Text(
-                                  "Skip Sign in",
+                                  AppLocalizations.of(context)
+                                      .translate("skipSignIn"),
                                   style: GoogleFonts.montserrat(
                                     textStyle: const TextStyle(
                                       decoration: TextDecoration.underline,

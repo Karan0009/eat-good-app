@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../shared/services/app_localizations_service.dart';
+
 class SignupWithGoogleButtonWidget extends StatelessWidget {
   const SignupWithGoogleButtonWidget({super.key});
   @override
@@ -23,7 +25,7 @@ class SignupWithGoogleButtonWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: Text(
-              "Sign Up with Google",
+              AppLocalizations.of(context).translate("signUpWithGoogle"),
               style: GoogleFonts.montserrat(
                 textStyle:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),

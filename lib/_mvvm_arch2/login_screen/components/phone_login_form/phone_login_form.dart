@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/services/app_localizations_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../shared/components/rounded_border_on_some_sides/rounded_border_on_some_sides.dart';
@@ -34,9 +35,9 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'Phone Number',
-          style: TextStyle(
+        Text(
+          AppLocalizations.of(context).translate("phoneNumber"),
+          style: const TextStyle(
             color: Color.fromRGBO(102, 112, 133, 1),
           ),
         ),

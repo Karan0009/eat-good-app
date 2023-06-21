@@ -5,5 +5,10 @@ class NavigationService {
 
   GlobalKey<NavigatorState> rootNavKey = GlobalKey();
 
-  NavigatorState get nav => rootNavKey.currentState!;
+  NavigatorState get nav {
+    final val = rootNavKey.currentState;
+    if (val != null) return val;
+    throw Exception(
+        'NavigatorState is not accessible. Ensure that rootNavKey has a valid context.');
+  }
 }

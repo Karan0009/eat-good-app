@@ -6,6 +6,8 @@ import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_scree
 import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_screen_repo_impl.dart';
 import 'package:login_screen_2/_mvvm_arch2/profile_screen/repositories/profile_screen_repo.dart';
 import 'package:login_screen_2/_mvvm_arch2/profile_screen/repositories/profile_screen_repo_impl.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/providers/theme_provider.dart';
+// import 'package:login_screen_2/_mvvm_arch2/shared/providers/theme_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/providers/user_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/services/navigation_service.dart';
 
@@ -17,11 +19,12 @@ void setupLocator() {
   locator.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   locator.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance);
-  locator.registerLazySingleton(() => NavigationService());
+  locator.registerSingleton<NavigationService>(NavigationService());
   locator.registerFactory<LoginScreenRepo>(() => LoginScreenRepoImpl());
   locator.registerFactory<ProfileScreenRepo>(() => ProfileScreenRepoImpl());
   locator
       .registerFactory<HomeScreenRepository>(() => HomeScreenRepositoryImpl());
 
   locator.registerSingleton<UserProvider>(UserProvider());
+  locator.registerSingleton<ThemeProvider>(ThemeProvider());
 }

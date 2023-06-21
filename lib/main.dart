@@ -8,6 +8,8 @@ import 'package:login_screen_2/_mvvm_arch2/login_screen/views/login_screen.view.
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:login_screen_2/_mvvm_arch2/profile_screen/view_models/profile.viewmodel.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/providers/theme_provider.dart';
+// import 'package:login_screen_2/_mvvm_arch2/shared/providers/theme_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/providers/user_provider.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/routes/routes.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/services/app_localizations_service.dart';
@@ -27,8 +29,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AppViewModel()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => AppViewModel()),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(
             loginRepo: locator<LoginScreenRepo>(),
@@ -61,27 +64,32 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final appVm = Provider.of<AppViewModel>(context, listen: false);
-    appVm.initializeData(context).then((value) {
-      FlutterNativeSplash.remove();
-    }).catchError((err) {
-      // some error occured
-    });
+
+    // final appVm = Provider.of<AppViewModel>(context, listen: false);
+    // appVm.initializeData(context).then((value) {
+    //   FlutterNativeSplash.remove();
+    // }).catchError((err) {
+    //   print(err.toString());
+    //   // some error occured
+    // });
   }
 
   final navService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {
+    final appVm = Provider.of<AppViewModel>(context, listen: true);
     return MaterialApp(
       title: 'My App',
+      theme: appVm.getTheme(),
+      navigatorKey: navService.rootNavKey,
       supportedLocales: const [
         Locale('en', 'US'),
         Locale('hi', 'IN'),
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
-        ...GlobalMaterialLocalizations.delegates,
+        GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
       localeResolutionCallback: (locale, supportedLocales) {
@@ -96,7 +104,6 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: const LoginScreen(),
       onGenerateRoute: AppRoutes.onGenerateRoutes,
-      navigatorKey: navService.rootNavKey,
     );
   }
 

@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: selectedBottomNavBarIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Theme.of(context).backgroundColor,
         onTap: (curIndex) {
           setState(() {
             selectedBottomNavBarIndex = curIndex;

@@ -32,7 +32,7 @@ class _HomeNavHomeScreenState extends State<HomeNavHomeScreen> {
           const Text("home screen"),
           Text(userProvider.user?.firstName ?? ""),
           Text(userProvider.user?.lastName ?? ""),
-          Text(userProvider.user?.firebaseUser?.phoneNumber ?? "")
+          Text(userProvider.user?.phoneNumber ?? "")
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:login_screen_2/_mvvm_arch2/login_screen/models/phone_details.dar
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
 import 'package:provider/provider.dart';
 
+import '../../../shared/services/app_localizations_service.dart';
 import '../otp_timer/timer_widget.dart';
 
 class ResendOtpButton extends StatelessWidget {
@@ -85,7 +86,7 @@ class ResendOtpButton extends StatelessWidget {
                             ),
                           )
                         : Text(
-                            "Resend OTP",
+                            AppLocalizations.of(context).translate("resendOtp"),
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 fontSize: 16,

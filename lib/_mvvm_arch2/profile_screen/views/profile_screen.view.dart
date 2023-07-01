@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/profile_screen/view_models/profile.viewmodel.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/layouts/screen_layout.dart';
 import 'package:provider/provider.dart';
-
-import '../../shared/layouts/page_layout.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,11 +23,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
     final vm = Provider.of<ProfileScreenViewModel>(context, listen: true);
-    return PageLayout(
+    return ScreenLayout(
+      isLoading: vm.isLoading,
       screenHeight: screenHeight,
+      appBar: AppBar(
+          title: const Text("Profile screen"),
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          titleTextStyle: GoogleFonts.montserrat(
+            textStyle: const TextStyle(fontSize: 20),
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w600,
+          ),
+          leading: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          )),
       child: Column(
         children: [
-          const Text("profile"),
           ElevatedButton(
             onPressed: () {
               vm.logoutButtonClickHandler(context);

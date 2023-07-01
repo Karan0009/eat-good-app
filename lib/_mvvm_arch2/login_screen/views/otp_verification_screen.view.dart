@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../shared/components/loading_overlay/loading_overlay.dart';
 import '../../shared/components/login_screen_footer/login_screen_footer.dart';
+import '../../shared/services/app_localizations_service.dart';
 import '../components/resend_otp_button/resend_otp_button.dart';
 
 class LoginOtpScreen extends StatefulWidget {
@@ -26,14 +27,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   int resendOtpTimeInSeconds = 30;
   late Timer interval;
   int remainingResendOtpTimeInSeconds = 0;
-
-  // _LoginOtpScreenState() {
-  //   for (int i = 0; i < otpLen; ++i) {
-  //     phoneOtpFormKeys.add(GlobalKey<FormState>());
-  //   }
-  // }
-  // final List<GlobalKey<FormState>> phoneOtpFormKeys = [];
-
   @override
   void initState() {
     super.initState();
@@ -78,11 +71,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<LoginViewModel>(context, listen: true);
-    // final auth = Provider.of<AuthProvider>(context, listen: true);
-    // final args =
-    //     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    // final countryCode = args['countryCode'];
-    // final phone = args['phone'];
     final completePhoneNumber = "${widget.countryCode} ${widget.phone}";
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
     return LoadingOverlay(
@@ -108,7 +96,8 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "An OTP was sent to",
+                            AppLocalizations.of(context)
+                                .translate("anOtpWasSentTo"),
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(fontSize: 30),
                               fontWeight: FontWeight.w600,
@@ -187,7 +176,8 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                                 onTap: () =>
                                     {vm.changePhoneNumberHandler(context)},
                                 child: Text(
-                                  "Change Number",
+                                  AppLocalizations.of(context)
+                                      .translate("changeNumber"),
                                   style: GoogleFonts.montserrat(
                                     textStyle: const TextStyle(
                                       decoration: TextDecoration.underline,

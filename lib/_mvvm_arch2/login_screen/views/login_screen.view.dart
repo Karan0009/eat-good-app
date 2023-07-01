@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/components/loading_overlay/loading_overlay.dart';
@@ -8,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../../shared/components/custom_divider/custom_divider.dart';
 import '../../shared/components/login_screen_footer/login_screen_footer.dart';
-import '../../shared/view_models/app.viewmodel.dart';
 import '../components/phone_login_form/phone_login_form.dart';
 import '../components/signup_with_google/signup_with_google.dart';
 
@@ -23,14 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    final appVm = Provider.of<AppViewModel>(context, listen: false);
-    appVm.initializeData(context).then((value) {
-      FlutterNativeSplash.remove();
-    }).catchError((err) {
-      print(err.toString());
-      // some error occured
-    });
-    // Provider.of<LoginViewModel>(context,listen: false).
   }
 
   final phoneNumberFormKey = GlobalKey<FormState>();
@@ -63,17 +53,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Text(
                             AppLocalizations.of(context).translate("welcomeTo"),
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(fontSize: 30),
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
                           Text(
                             "Untitled",
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(fontSize: 30),
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
                         ],
                       ),
@@ -128,12 +112,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   AppLocalizations.of(context)
                                       .translate("skipSignIn"),
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: const TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                        decoration: TextDecoration.underline,
+                                      ),
                                 ),
                               )
                             ],

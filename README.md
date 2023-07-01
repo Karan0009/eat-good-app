@@ -14,3 +14,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+if android got deleted then run these tasks
+
+1. Your project requires a newer version of the Kotlin Gradle plugin. │
+   │ Find the latest version on https://kotlinlang.org/docs/releases.html#release-details, │
+   │ then update │
+   │ /Users/karansingh/mythings/workspaces/flutter_workspace/login_screen_2/android/build.gr │
+   │ adle: │
+   │ ext.kotlin_version = '<latest-version>'

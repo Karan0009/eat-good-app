@@ -1,10 +1,20 @@
 {
-    "welcomeTo":"Welcome to",
-    "phoneNumber":"Phone Number",
-    "or":"Or",
-    "signUpWithGoogle":"Sign Up with Google",
-    "skipSignIn":"Skip Sign in",
-    "byProceddingYouAgreeToOur":"By Proceeding, you agree to our",
-    "terms":"Terms",
-    "andConditionsAndPrivacyPolicy":"and Conditions & Privacy Policy"
+  "welcomeTo": "Welcome to",
+  "phoneNumber": "Phone Number",
+  "or": "Or",
+  "signUpWithGoogle": "Sign Up with Google",
+  "skipSignIn": "Skip Sign in",
+  "byProceddingYouAgreeToOur": "By Proceeding, you agree to our",
+  "terms": "Terms",
+  "andConditionsAndPrivacyPolicy": "and Conditions & Privacy Policy",
+  "anOtpWasSentTo": "An OTP was sent to",
+  "changeNumber": "Change Number",
+  "resendOtp": "Resend OTP",
+  "completeYourProfile": "Complete your profile",
+  "personalInfo": "Personal Info",
+  "firstName": "FIRST NAME",
+  "lastName": "LAST NAME",
+  "firstNamePlaceholder": "Sunita",
+  "lastNamePlaceholder": "Devi",
+  "next": "Next"
 }

@@ -4,6 +4,7 @@ import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen
 import 'package:provider/provider.dart';
 
 import '../../shared/layouts/screen_layout.dart';
+import '../../shared/services/app_localizations_service.dart';
 
 class NewUserDetailsScreen extends StatefulWidget {
   final personlInfoFormKey = GlobalKey<FormState>();
@@ -57,7 +58,8 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                     ),
                     const SizedBox(width: 20),
                     Text(
-                      "Complete your profile",
+                      AppLocalizations.of(context)
+                          .translate("completeYourProfile"),
                       style: GoogleFonts.montserrat(
                         textStyle: const TextStyle(fontSize: 24),
                         fontWeight: FontWeight.w600,
@@ -78,7 +80,7 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Personal Info",
+                      AppLocalizations.of(context).translate("personalInfo"),
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 16),
                           fontWeight: FontWeight.w400,
@@ -98,9 +100,9 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'FIRST NAME',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context).translate("firstName"),
+                      style: const TextStyle(
                           color: Color.fromRGBO(102, 112, 133, 1),
                           fontSize: 10),
                     ),
@@ -129,11 +131,12 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                         ),
                         autofocus: true,
                         keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Sunita",
+                          hintText: AppLocalizations.of(context)
+                              .translate("firstNamePlaceholder"),
                           counterText: "",
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Color.fromRGBO(102, 112, 133, 0.5),
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
@@ -181,9 +184,9 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'LAST NAME',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context).translate("lastName"),
+                      style: const TextStyle(
                           color: Color.fromRGBO(102, 112, 133, 1),
                           fontSize: 10),
                     ),
@@ -211,11 +214,12 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                           ),
                         ),
                         keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Devi",
+                          hintText: AppLocalizations.of(context)
+                              .translate("lastNamePlaceholder"),
                           counterText: "",
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Color.fromRGBO(102, 112, 133, 0.5),
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
@@ -281,7 +285,7 @@ class _NewUserDetailsScreenState extends State<NewUserDetailsScreen> {
                       ),
                     ),
                     child: Text(
-                      "Next",
+                      AppLocalizations.of(context).translate("next"),
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 12),
                           fontWeight: FontWeight.w600,

@@ -56,6 +56,8 @@ dependencies:
   # for mvvm architecture
   fluttertoast: ^8.2.1
   another_flushbar: ^1.12.29
+  image_picker: ^0.8.9
+  image_cropper: ^4.0.1
 
 dev_dependencies:
   flutter_test:

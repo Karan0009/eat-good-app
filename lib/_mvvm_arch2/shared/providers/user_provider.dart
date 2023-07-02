@@ -10,10 +10,14 @@ class UserProvider extends ChangeNotifier {
   CustomUser? _user;
   CustomUser? get user => _user;
 
-  void setLoggedInUser(CustomUser newUser) async {
-    _user = newUser;
-    // await _saveDataInLocalStorage(user);
+  set user(CustomUser? val) {
+    _user = val;
     notifyListeners();
+  }
+
+  void setLoggedInUser(CustomUser newUser) async {
+    user = newUser;
+    // await _saveDataInLocalStorage(user);
   }
 
   bool setFirstName(String firstName) {
@@ -24,8 +28,7 @@ class UserProvider extends ChangeNotifier {
       }
       return false;
     } catch (ex) {
-      _user = null;
-      notifyListeners();
+      user = null;
       return false;
     }
   }
@@ -54,8 +57,7 @@ class UserProvider extends ChangeNotifier {
         throw Exception("user not found");
       }
     } catch (ex) {
-      _user = null;
-      notifyListeners();
+      user = null;
       return false;
     }
   }
@@ -67,23 +69,22 @@ class UserProvider extends ChangeNotifier {
       if (userInfo != null) {
         String jsonStr = userInfo;
         Map<String, dynamic> parsedJson = json.decode(jsonStr);
-        _user = CustomUser.fromJson(parsedJson);
+        user = CustomUser.fromJson(parsedJson);
         return true;
       } else {
         throw Exception("user not found");
       }
     } catch (ex) {
-      _user = null;
+      user = null;
       final SharedPreferences sp = await SharedPreferences.getInstance();
       await sp.remove(AppConstants.userInfoKey);
-      notifyListeners();
       return false;
     }
   }
 
   Future<bool> removeLoggedInUser() async {
     try {
-      _user = null;
+      user = null;
       final SharedPreferences sp = await SharedPreferences.getInstance();
       await sp.remove(AppConstants.userInfoKey);
       return true;

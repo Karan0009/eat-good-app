@@ -4,6 +4,9 @@ import 'package:login_screen_2/_mvvm_arch2/profile_screen/view_models/profile.vi
 import 'package:login_screen_2/_mvvm_arch2/shared/layouts/screen_layout.dart';
 import 'package:provider/provider.dart';
 
+import '../../locator.dart';
+import '../../shared/providers/user_provider.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -21,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = locator<UserProvider>();
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
     final vm = Provider.of<ProfileScreenViewModel>(context, listen: true);
     return ScreenLayout(
@@ -41,12 +45,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )),
       child: Column(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              vm.logoutButtonClickHandler(context);
-            },
-            child: const Text("Logout"),
-          )
+          if (userProvider.user != null)
+            ElevatedButton(
+              onPressed: () {
+                vm.logoutButtonClickHandler(context);
+              },
+              child: const Text("Logout"),
+            ),
+          if (userProvider.user == null)
+            ElevatedButton(
+              onPressed: () {
+                vm.loginButtonClickHandler(context);
+              },
+              child: const Text("Login"),
+            ),
         ],
       ),
     );

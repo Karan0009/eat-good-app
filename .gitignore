@@ -83,3 +83,5 @@ app.*.map.json
 .flutter-plugins.json
 .flutter-plugins-dependencies.json
 
+**/.dart_tool/
+.gradle

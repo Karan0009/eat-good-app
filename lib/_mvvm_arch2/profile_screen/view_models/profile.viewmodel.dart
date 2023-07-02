@@ -36,4 +36,16 @@ class ProfileScreenViewModel extends LoadingViewModel {
       Utils.showSnackBar(context, "Some error occured");
     }
   }
+
+  loginButtonClickHandler(BuildContext context) {
+    try {
+      _navService.nav.pushNamedAndRemoveUntil(
+        NamedRoute.loginScreen,
+        (route) => false,
+      );
+    } catch (ex) {
+      isLoading = false;
+      Utils.showSnackBar(context, "Some error occured");
+    }
+  }
 }

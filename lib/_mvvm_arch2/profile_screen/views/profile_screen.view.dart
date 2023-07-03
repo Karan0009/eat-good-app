@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/_mvvm_arch2/profile_screen/view_models/profile.viewmodel.dart';
 import 'package:login_screen_2/_mvvm_arch2/shared/layouts/screen_layout.dart';
+import 'package:login_screen_2/_mvvm_arch2/shared/services/app_localizations_service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../locator.dart';
 import '../../shared/providers/user_provider.dart';
@@ -31,18 +33,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoading: vm.isLoading,
       screenHeight: screenHeight,
       appBar: AppBar(
-          title: const Text("Profile screen"),
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          titleTextStyle: GoogleFonts.montserrat(
-            textStyle: const TextStyle(fontSize: 20),
-            color: Theme.of(context).primaryColor,
-            fontWeight: FontWeight.w600,
-          ),
-          leading: const Icon(
-            Icons.arrow_back,
+        title: Text(
+          AppLocalizations.of(context).translate("yourAccount"),
+        ),
+        // leadingWidth: 100
+        titleSpacing: -5,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        titleTextStyle: GoogleFonts.montserrat(
+          textStyle: const TextStyle(fontSize: 20),
+          color: Theme.of(context).primaryColor,
+          fontWeight: FontWeight.w600,
+        ),
+        leading: Container(
+          margin: const EdgeInsets.all(20),
+          child: SvgPicture.asset(
+            'assets/icons/arrow_back_icon.svg',
+            semanticsLabel: "back icon",
             color: Colors.black,
-          )),
+          ),
+        ),
+        // const Icon(
+        //   Icons.arrow_back,
+        //   color: Colors.black,
+        // ),
+      ),
       child: Column(
         children: [
           if (userProvider.user != null)

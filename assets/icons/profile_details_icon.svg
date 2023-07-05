@@ -1,0 +1,31 @@
+<svg width="62" height="64" viewBox="0 0 62 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 1168">
+<rect id="Rectangle 1756" x="3.56714" y="3.47794" width="58.4327" height="60.0608" rx="5.30987" fill="#D6F8B8"/>
+<g id="Group 1160">
+<path id="Rectangle 1755" d="M1.35481 17.1745H57.1326V54.6889C57.1326 56.8884 55.3496 58.6713 53.1502 58.6713H5.33721C3.13779 58.6713 1.35481 56.8884 1.35481 54.6889V17.1745Z" stroke="#344054" stroke-width="2.65493"/>
+<circle id="Ellipse 275" cx="9.15757" cy="8.87014" r="2.711" stroke="#344054" stroke-width="1.76996"/>
+<circle id="Ellipse 276" cx="19.2005" cy="8.87014" r="2.711" stroke="#344054" stroke-width="1.76996"/>
+<circle id="Ellipse 278" cx="13.7226" cy="31.6954" r="7.27606" stroke="#344054" stroke-width="1.76996"/>
+<g id="Group 1159">
+<path id="Vector" d="M13.7226 33.2171C15.4034 33.2171 16.7659 31.8546 16.7659 30.1737C16.7659 28.4929 15.4034 27.1304 13.7226 27.1304C12.0418 27.1304 10.6792 28.4929 10.6792 30.1737C10.6792 31.8546 12.0418 33.2171 13.7226 33.2171Z" stroke="#344054" stroke-width="1.23897" stroke-miterlimit="10"/>
+<path id="Vector_2" d="M9.15747 36.2605C9.58596 35.3447 10.2392 34.5757 11.0449 34.0386C11.8506 33.5014 12.7774 33.2171 13.7225 33.2171C14.6677 33.2171 15.5944 33.5014 16.4001 34.0386C17.2058 34.5757 17.8591 35.3447 18.2876 36.2605" stroke="#344054" stroke-width="1.23897" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<circle id="Ellipse 277" cx="29.2435" cy="8.87014" r="2.711" stroke="#344054" stroke-width="1.76996"/>
+<g id="Group 1157">
+<rect id="Rectangle 1756_2" x="25.5916" y="36.1625" width="24.6513" height="1.76996" rx="0.884978" fill="#344054"/>
+<rect id="Rectangle 1758" x="25.5916" y="26.2174" width="24.6513" height="1.76996" rx="0.884978" fill="#344054"/>
+<rect id="Rectangle 1757" x="25.5916" y="31.1899" width="19.0487" height="1.76996" rx="0.884978" fill="#344054"/>
+</g>
+<g id="Group 1158">
+<g id="Group 1161">
+<g id="Group 1162">
+<rect id="Rectangle 1759" x="9.4924" y="44.4496" width="8.95518" height="8.95518" rx="2.65493" stroke="#344054" stroke-width="1.76996"/>
+<rect id="Rectangle 1760" x="24.5078" y="44.4496" width="8.95518" height="8.95518" rx="2.65493" stroke="#344054" stroke-width="1.76996"/>
+<rect id="Rectangle 1761" x="39.5229" y="44.4496" width="8.95518" height="8.95518" rx="2.65493" stroke="#344054" stroke-width="1.76996"/>
+</g>
+</g>
+</g>
+<path id="Rectangle 1755_2" d="M1.35481 6.13287C1.35481 3.93345 3.13779 2.15047 5.33721 2.15047H53.1502C55.3496 2.15047 57.1326 3.93345 57.1326 6.13287V16.8428H1.35481V6.13287Z" stroke="#344054" stroke-width="2.65493"/>
+</g>
+</g>
+</svg>

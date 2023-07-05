@@ -25,6 +25,13 @@ class AppThemeData {
         ),
         fontWeight: FontWeight.w300,
       ),
+      labelSmall: GoogleFonts.montserrat(
+        textStyle: const TextStyle(
+          color: Color.fromRGBO(152, 162, 179, 1),
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     ),
     backgroundColor: Colors.black,
   );
@@ -45,6 +52,13 @@ class AppThemeData {
           color: Colors.black,
         ),
         fontWeight: FontWeight.w300,
+      ),
+      labelSmall: GoogleFonts.montserrat(
+        textStyle: const TextStyle(
+          color: Color.fromRGBO(52, 64, 84, 1),
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     ),
     backgroundColor: Colors.white,

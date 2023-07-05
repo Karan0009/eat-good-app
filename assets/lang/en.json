@@ -17,5 +17,11 @@
   "firstNamePlaceholder": "Sunita",
   "lastNamePlaceholder": "Devi",
   "next": "Next",
-  "yourAccount": "Your Account"
+  "yourAccount": "Your Account",
+  "profileDetails": "Profile Details",
+  "placesAdded": "Places Added",
+  "yourReviews": "Your Reviews",
+  "savedPlaces": "Saved Places",
+  "generalPreferences": "General Preferences",
+  "feedback": "Feedback"
 }

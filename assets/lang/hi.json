@@ -17,5 +17,11 @@
   "firstNamePlaceholder": "सुनीता",
   "lastNamePlaceholder": "देवी",
   "next": "आगे बढ़ें",
-  "yourAccount": "आपका खाता"
+  "yourAccount": "आपका खाता",
+  "profileDetails": "प्रोफ़ाइल विवरण",
+  "placesAdded": "जगहों को जोड़ा गया",
+  "yourReviews": "आपकी समीक्षा",
+  "savedPlaces": "सहेजी गई जगहें",
+  "generalPreferences": "सामान्य प्राथमिकताएं",
+  "feedback": "प्रतिक्रिया"
 }

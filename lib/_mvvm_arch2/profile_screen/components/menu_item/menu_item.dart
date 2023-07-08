@@ -10,7 +10,11 @@ class MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: const Color.fromRGBO(252, 252, 253, 1),
+        // color: const Color.fromRGBO(252, 252, 253, 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: const Color.fromRGBO(252, 252, 253, 1),
+        ),
         child: Column(
           children: [
             const Margin(height: 30),

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:login_screen_2/_mvvm_arch2/home_landing_screen/view_models/home_landing_screen.viewmodel.dart';
 import 'package:login_screen_2/_mvvm_arch2/locator.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/repositories/login_screen_repo.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/view_models/login_screen.viewmodel.dart';
@@ -44,6 +45,11 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => HomeViewModel(
+            homeRepo: locator<HomeScreenRepository>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomeLandingViewModel(
             homeRepo: locator<HomeScreenRepository>(),
           ),
         )

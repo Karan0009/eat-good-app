@@ -2,10 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:login_screen_2/_mvvm_arch2/home_screen/view_models/home_screen.viewmodel.dart';
-import 'package:login_screen_2/_mvvm_arch2/profile_screen/views/profile_screen.view.dart';
-import 'package:login_screen_2/screens/home_screen_home_nav.dart';
 import 'package:provider/provider.dart';
 
+import '../../home_landing_screen/views/home_landing_screen.view.dart';
 import '../../shared/layouts/screen_layout.dart';
 import '../models/home_page_view_arguments.dart';
 
@@ -20,8 +19,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedBottomNavBarIndex = 0;
   final List<Widget> _widgetOptions = const [
-    HomeNavHomeScreen(),
-    ProfileScreen()
+    HomeLandingScreen(),
+    HomeLandingScreen()
   ];
   @override
   void initState() {

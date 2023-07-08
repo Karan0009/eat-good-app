@@ -3,6 +3,7 @@ import 'package:login_screen_2/_mvvm_arch2/home_screen/views/home_screen.view.da
 import 'package:login_screen_2/_mvvm_arch2/login_screen/views/login_screen.view.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/views/new_user_details_screen.view.dart';
 import 'package:login_screen_2/_mvvm_arch2/login_screen/views/otp_verification_screen.view.dart';
+import 'package:login_screen_2/_mvvm_arch2/profile_screen/views/profile_screen.view.dart';
 
 import '../../home_screen/models/home_page_view_arguments.dart';
 
@@ -39,6 +40,11 @@ class AppRoutes {
           builder: (context) => NewUserDetailsScreen(),
           settings: settings,
         );
+      case NamedRoute.profileScreen:
+        return MaterialPageRoute(
+          builder: (context) => const ProfileScreen(),
+          settings: settings,
+        );
       default:
         return MaterialPageRoute(
           builder: (context) => const _UndefinedView(),
@@ -68,4 +74,5 @@ class NamedRoute {
   static const String loginScreen = "/login";
   static const String otpVerificationScreen = "/otp-verification";
   static const String newUserDetailsScreen = "/signup-user-details-form";
+  static const String profileScreen = "/profile";
 }

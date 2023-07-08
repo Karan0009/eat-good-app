@@ -22,7 +22,6 @@ class _LandingScreenState extends State<LandingScreen> {
     appVm.initializeData(context).then((value) {
       FlutterNativeSplash.remove();
     }).catchError((err) {
-      print(err.toString());
       // some error occured
     });
     // Provider.of<LoginViewModel>(context,listen: false).

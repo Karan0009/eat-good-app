@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../locator.dart';
-import '../../shared/components/loading_overlay/loading_overlay.dart';
 import '../../shared/components/margin/margin.dart';
 import '../../shared/providers/user_provider.dart';
 import '../components/avatar_circle/avatar_circle.dart';
@@ -60,13 +59,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
-          leading: Container(
-            // height: screenHeight,
-            margin: const EdgeInsets.all(20),
-            child: SvgPicture.asset(
-              'assets/icons/arrow_back_icon.svg',
-              semanticsLabel: "back icon",
-              color: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              vm.back();
+            },
+            child: Container(
+              // height: screenHeight,
+              margin: const EdgeInsets.all(20),
+              child: SvgPicture.asset(
+                'assets/icons/arrow_back_icon.svg',
+                semanticsLabel: "back icon",
+                color: Colors.white,
+              ),
             ),
           ),
           // const Icon(
@@ -87,24 +91,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Margin(height: 100),
                 const AvatarCircle(),
-                Container(
-                  color: Colors.yellow,
+                SizedBox(
                   height: 400,
-                  margin: EdgeInsets.zero,
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  // padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Number of columns in the grid
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 0.9,
+                      childAspectRatio: 1.1,
                     ),
-                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     itemCount: vm
                         .getMenuItems()
                         .length, // Total number of items in the grid
@@ -131,6 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                     child: const Text("Login"),
                   ),
+                const Margin(height: 100),
               ],
             ),
           ),

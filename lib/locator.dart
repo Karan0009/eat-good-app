@@ -9,6 +9,7 @@ import 'package:login_screen_2/screens/profile_screen/repositories/profile_scree
 import 'package:login_screen_2/shared/providers/theme_provider.dart';
 // import 'package:login_screen_2/shared/providers/theme_provider.dart';
 import 'package:login_screen_2/shared/providers/user_provider.dart';
+import 'package:login_screen_2/shared/services/add_image_service.dart';
 import 'package:login_screen_2/shared/services/navigation_service.dart';
 
 import 'screens/home_screen/repositories/home_screen_repo_impl.dart';
@@ -20,6 +21,7 @@ void setupLocator() {
   locator.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance);
   locator.registerSingleton<NavigationService>(NavigationService());
+  locator.registerLazySingleton<AddImageService>(() => AddImageService());
   locator.registerFactory<LoginScreenRepo>(() => LoginScreenRepoImpl());
   locator.registerFactory<ProfileScreenRepo>(() => ProfileScreenRepoImpl());
   locator

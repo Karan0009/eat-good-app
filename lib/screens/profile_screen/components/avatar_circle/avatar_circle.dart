@@ -44,15 +44,6 @@ class AvatarCircle extends StatelessWidget {
                   width: 6,
                 ),
               ),
-              // child: OverflowBox(
-              //   alignment: Alignment.center,
-              //   child: vm.profilePictureFile.path != ""
-              //       ? Image.file(
-              //           vm.profilePictureFile,
-              //           fit: BoxFit.cover,
-              //         )
-              //       : const Placeholder(),
-              // ),
             ),
             Positioned(
               bottom: 0,

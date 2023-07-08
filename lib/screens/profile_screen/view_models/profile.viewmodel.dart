@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:login_screen_2/screens/profile_screen/repositories/profile_screen_repo.dart';
 import 'package:login_screen_2/shared/routes/routes.dart';
+import 'package:login_screen_2/shared/services/add_image_service.dart';
 
 import '../../../locator.dart';
 import '../../../shared/providers/user_provider.dart';
 import '../../../shared/services/navigation_service.dart';
 import '../../../shared/utils/utils.dart';
 import '../../../shared/view_models/loading.viewmodel.dart';
+import '../../view_profile_photo_screen/models/view_profile_photo_screen_arguments.dart';
 import '../models/menu_item_model.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProfileScreenViewModel extends LoadingViewModel {
   ProfileScreenViewModel({required this.profileRepo}) : super();
@@ -19,7 +20,9 @@ class ProfileScreenViewModel extends LoadingViewModel {
   final ProfileScreenRepo profileRepo;
   final UserProvider _userProvider = locator<UserProvider>();
   final NavigationService _navService = locator<NavigationService>();
+  final AddImageService _addImageService = locator<AddImageService>();
 
+  File profilePictureFile = File("");
   final List<MenuItemModel> _menuItems = [
     MenuItemModel(
       icon: 'assets/icons/profile_details_icon.svg',
@@ -44,7 +47,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
     MenuItemModel(
       icon: 'assets/icons/profile_feedback_icon.svg',
       title: "feedback",
-    )
+    ),
   ];
 
   Future<void> logoutButtonClickHandler(BuildContext context) async {
@@ -94,14 +97,14 @@ class ProfileScreenViewModel extends LoadingViewModel {
   }
 
   final List<Map<String, dynamic>>
-      showProfilePictureOptionsBottomModelItemsList = [
+      _showProfilePictureOptionsBottomModelItemsList = [
     {"label": "View"},
     {"label": "Delete"},
     {"label": "Edit"},
     {"label": "Cancel"},
   ];
 
-  final List<Map<String, dynamic>> showImageSourceBottomModelItemsList = [
+  final List<Map<String, dynamic>> _showImageSourceBottomModelItemsList = [
     {"label": "Camera"},
     {"label": "Gallery"},
     {"label": "Cancel"},
@@ -118,7 +121,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
         backgroundColor: Colors.white,
         constraints: const BoxConstraints(maxHeight: 150),
         builder: (_) => ListView.builder(
-          itemCount: showProfilePictureOptionsBottomModelItemsList.length,
+          itemCount: _showProfilePictureOptionsBottomModelItemsList.length,
           itemBuilder: (_, index) {
             return GestureDetector(
               onTap: () {
@@ -153,7 +156,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
                       ),
                     )),
                 child: Text(
-                  showProfilePictureOptionsBottomModelItemsList[index]
+                  _showProfilePictureOptionsBottomModelItemsList[index]
                           ["label"] ??
                       "",
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -181,13 +184,15 @@ class ProfileScreenViewModel extends LoadingViewModel {
         backgroundColor: Colors.white,
         constraints: const BoxConstraints(maxHeight: 114),
         builder: (_) => ListView.builder(
-          itemCount: showImageSourceBottomModelItemsList.length,
+          itemCount: _showImageSourceBottomModelItemsList.length,
           itemBuilder: (_, index) {
             return GestureDetector(
               onTap: () async {
                 switch (index) {
                   case 0:
-                    imagePickerAndCropperHandler(context, ImageSource.camera)
+                    _addImageService
+                        .imagePickerAndCropperHandler(
+                            context, ImageSource.camera)
                         .then((value) {
                       if (value != null) {
                         closeBottamModalHandler(context);
@@ -197,7 +202,9 @@ class ProfileScreenViewModel extends LoadingViewModel {
                     });
                     break;
                   case 1:
-                    imagePickerAndCropperHandler(context, ImageSource.gallery)
+                    _addImageService
+                        .imagePickerAndCropperHandler(
+                            context, ImageSource.gallery)
                         .then((value) {
                       if (value != null) {
                         closeBottamModalHandler(context);
@@ -227,7 +234,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
                       ),
                     )),
                 child: Text(
-                  showImageSourceBottomModelItemsList[index]["label"] ?? "",
+                  _showImageSourceBottomModelItemsList[index]["label"] ?? "",
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontWeight: FontWeight.normal,
                       ),
@@ -244,7 +251,10 @@ class ProfileScreenViewModel extends LoadingViewModel {
   }
 
   viewProfilePhotoHandler(BuildContext context) {
-    // TODO : navigate to view profile photo page
+    _navService.nav.pushNamed(
+      NamedRoute.viewProfilePhotoScreen,
+      arguments: ViewProfilePhotoScreenArguments(imageFile: profilePictureFile),
+    );
   }
 
   deleteProfilePhotoHandler(BuildContext context) {
@@ -258,70 +268,5 @@ class ProfileScreenViewModel extends LoadingViewModel {
 
   closeBottamModalHandler(BuildContext context) {
     _navService.nav.pop();
-  }
-
-  Future<File?> imagePickerAndCropperHandler(
-      BuildContext context, ImageSource source) async {
-    try {
-      final pickedImage = await imagePickerHandler(source);
-      if (pickedImage == null) {
-        throw Exception("Image not selected");
-      }
-      final croppedImage = await editImageHandler(pickedImage);
-      if (croppedImage == null) {
-        throw Exception("Image not selected");
-      }
-      return File(croppedImage.path);
-    } catch (ex) {
-      Utils.showMaterialBanner(context, ex.toString());
-      return null;
-    }
-  }
-
-  final ImagePicker _picker = ImagePicker();
-  File profilePictureFile = File("");
-  Future<XFile?> imagePickerHandler(ImageSource source) async {
-    try {
-      final pickedFile = await _picker.pickImage(source: source);
-      return pickedFile;
-    } catch (ex) {
-      return null;
-      // some error occured
-    }
-  }
-
-  Future<CroppedFile?> editImageHandler(XFile imageData) async {
-    try {
-      final croppedImage = await ImageCropper().cropImage(
-          sourcePath: imageData.path,
-          aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-          compressQuality: 100,
-          maxWidth: 500,
-          maxHeight: 500,
-          compressFormat: ImageCompressFormat.jpg,
-          cropStyle: CropStyle.circle,
-          uiSettings: [
-            AndroidUiSettings(
-              toolbarTitle: 'Crop Image',
-              toolbarColor: Colors.deepOrange,
-              statusBarColor: Colors.deepOrange.shade900,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false,
-            ),
-            IOSUiSettings(
-              title: 'Crop Image',
-              cancelButtonTitle: 'Cancel',
-              doneButtonTitle: 'Done',
-              aspectRatioLockEnabled: false,
-              aspectRatioPickerButtonHidden: true,
-              minimumAspectRatio: 1.0,
-            ),
-          ]);
-      return croppedImage;
-    } catch (ex) {
-      // some error occured
-      rethrow;
-    }
   }
 }

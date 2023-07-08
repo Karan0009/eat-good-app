@@ -85,3 +85,4 @@ app.*.map.json
 
 **/.dart_tool/
 .gradle
+local.properties

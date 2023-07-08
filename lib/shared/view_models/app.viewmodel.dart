@@ -7,7 +7,7 @@ import 'package:login_screen_2/shared/services/navigation_service.dart';
 import 'package:login_screen_2/shared/utils/utils.dart';
 import 'package:login_screen_2/shared/view_models/loading.viewmodel.dart';
 
-import '../../home_screen/models/home_page_view_arguments.dart';
+import '../../screens/home_screen/models/home_page_view_arguments.dart';
 
 class AppViewModel extends LoadingViewModel {
   final UserProvider _userProvider = locator<UserProvider>();

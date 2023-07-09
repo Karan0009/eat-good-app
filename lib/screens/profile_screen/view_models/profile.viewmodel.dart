@@ -11,7 +11,6 @@ import '../../../shared/providers/user_provider.dart';
 import '../../../shared/services/navigation_service.dart';
 import '../../../shared/utils/utils.dart';
 import '../../../shared/view_models/loading.viewmodel.dart';
-import '../../view_profile_photo_screen/models/view_profile_photo_screen_arguments.dart';
 import '../models/menu_item_model.dart';
 
 class ProfileScreenViewModel extends LoadingViewModel {
@@ -22,7 +21,16 @@ class ProfileScreenViewModel extends LoadingViewModel {
   final NavigationService _navService = locator<NavigationService>();
   final AddImageService _addImageService = locator<AddImageService>();
 
-  File profilePictureFile = File("");
+  File _profilePictureFile = File("");
+  set profilePictureFile(File input) {
+    _profilePictureFile = input;
+    notifyListeners();
+  }
+
+  File get profilePicture {
+    return _profilePictureFile;
+  }
+
   final List<MenuItemModel> _menuItems = [
     MenuItemModel(
       icon: 'assets/icons/profile_details_icon.svg',
@@ -197,7 +205,6 @@ class ProfileScreenViewModel extends LoadingViewModel {
                       if (value != null) {
                         closeBottamModalHandler(context);
                         profilePictureFile = value;
-                        notifyListeners();
                       }
                     });
                     break;
@@ -209,7 +216,6 @@ class ProfileScreenViewModel extends LoadingViewModel {
                       if (value != null) {
                         closeBottamModalHandler(context);
                         profilePictureFile = value;
-                        notifyListeners();
                       }
                     });
                     break;
@@ -251,41 +257,44 @@ class ProfileScreenViewModel extends LoadingViewModel {
   }
 
   viewProfilePhotoHandler(BuildContext context) {
-    if (profilePictureFile.path != "") {
+    if (profilePicture.path != "") {
       _navService.nav.pushNamed(
         NamedRoute.viewProfilePhotoScreen,
-        arguments:
-            ViewProfilePhotoScreenArguments(imageFile: profilePictureFile),
       );
     }
   }
 
   deleteProfilePhotoHandler(BuildContext context) {
-    if (profilePictureFile.path == "") {
+    if (profilePicture.path == "") {
       return;
     }
     closeBottamModalHandler(context);
-    Utils.showMaterialBanner(
-      context,
-      "Are you sure?",
-      actions: [
-        TextButton(
-          child: const Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
-            showProfilePictureOptionsBottomModel(context);
-          },
-        ),
-        TextButton(
-          child: const Text('Delete'),
-          onPressed: () {
-            // Perform delete operation
-            Navigator.of(context).pop(); // Close the dialog
-          },
-        ),
-      ],
-      autoCloseDuration: const Duration(seconds: 30),
-    );
+    late ScaffoldFeatureController<MaterialBanner, MaterialBannerClosedReason>
+        banner;
+    banner = Utils.showMaterialBanner(context, "Are you sure?",
+        messageStyle: Theme.of(context).textTheme.titleSmall ??
+            const TextStyle(fontSize: 14),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              banner.close(); // Close the dialog
+              showProfilePictureOptionsBottomModel(context);
+            },
+          ),
+          TextButton(
+            child: const Text('Delete'),
+            onPressed: () {
+              // Perform delete operation
+              removeProfilePicture();
+              banner.close(); // Close the dialog
+            },
+          ),
+        ]);
+  }
+
+  removeProfilePicture() {
+    profilePictureFile = File("");
   }
 
   editProfilePhotoHandler(BuildContext context) {

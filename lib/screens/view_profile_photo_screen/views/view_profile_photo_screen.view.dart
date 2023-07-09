@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:login_screen_2/screens/view_profile_photo_screen/models/view_profile_photo_screen_arguments.dart';
 import 'package:provider/provider.dart';
 
 import '../../../shared/components/loading_overlay/loading_overlay.dart';
@@ -9,8 +8,7 @@ import '../../../shared/services/app_localizations_service.dart';
 import '../../profile_screen/view_models/profile.viewmodel.dart';
 
 class ViewProfilePhotoScreen extends StatefulWidget {
-  ViewProfilePhotoScreenArguments? data;
-  ViewProfilePhotoScreen({super.key, this.data});
+  const ViewProfilePhotoScreen({super.key});
 
   @override
   State<ViewProfilePhotoScreen> createState() => _ViewProfilePhotoScreenState();
@@ -60,10 +58,6 @@ class _ViewProfilePhotoScreenState extends State<ViewProfilePhotoScreen> {
               GestureDetector(
                 onTap: () {
                   vm.showImageSourceSelector(context);
-                  setState(() {
-                    widget.data = ViewProfilePhotoScreenArguments(
-                        imageFile: vm.profilePictureFile);
-                  });
                 },
                 child: Container(
                   // height: screenHeight,
@@ -80,9 +74,7 @@ class _ViewProfilePhotoScreenState extends State<ViewProfilePhotoScreen> {
             //   color: Colors.black,
             // ),
           ),
-          body: widget.data != null
-              ? Image.file(widget.data!.imageFile)
-              : const Text("no image selected"),
+          body: Image.file(vm.profilePicture),
         ),
       ),
     );

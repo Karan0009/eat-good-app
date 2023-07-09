@@ -26,9 +26,9 @@ class AvatarCircle extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(214, 248, 184, 1),
                 borderRadius: BorderRadius.circular(width),
-                image: vm.profilePictureFile.path != ""
+                image: vm.profilePicture.path != ""
                     ? DecorationImage(
-                        image: FileImage(vm.profilePictureFile),
+                        image: FileImage(vm.profilePicture),
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                       )

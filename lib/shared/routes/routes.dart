@@ -4,7 +4,6 @@ import 'package:login_screen_2/screens/login_screen/views/login_screen.view.dart
 import 'package:login_screen_2/screens/login_screen/views/new_user_details_screen.view.dart';
 import 'package:login_screen_2/screens/login_screen/views/otp_verification_screen.view.dart';
 import 'package:login_screen_2/screens/profile_screen/views/profile_screen.view.dart';
-import 'package:login_screen_2/screens/view_profile_photo_screen/models/view_profile_photo_screen_arguments.dart';
 import 'package:login_screen_2/screens/view_profile_photo_screen/views/view_profile_photo_screen.view.dart';
 
 import '../../screens/home_screen/models/home_page_view_arguments.dart';
@@ -48,17 +47,11 @@ class AppRoutes {
           settings: settings,
         );
       case NamedRoute.viewProfilePhotoScreen:
-        if (args is ViewProfilePhotoScreenArguments) {
-          return MaterialPageRoute(
-            builder: (context) => ViewProfilePhotoScreen(data: args),
-            settings: settings,
-          );
-        } else {
-          return MaterialPageRoute(
-            builder: (context) => const _UndefinedView(),
-            settings: settings,
-          );
-        }
+        return MaterialPageRoute(
+          builder: (context) => const ViewProfilePhotoScreen(),
+          settings: settings,
+        );
+
       default:
         return MaterialPageRoute(
           builder: (context) => const _UndefinedView(),

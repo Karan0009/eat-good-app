@@ -94,7 +94,7 @@ class _PhoneOtpFormState extends State<_PhoneOtpForm> {
                               fontSize: 20,
                             ),
                           ),
-                          autofocus: false,
+                          autofocus: true,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             border: InputBorder.none,

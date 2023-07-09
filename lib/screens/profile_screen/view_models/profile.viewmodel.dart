@@ -251,14 +251,41 @@ class ProfileScreenViewModel extends LoadingViewModel {
   }
 
   viewProfilePhotoHandler(BuildContext context) {
-    _navService.nav.pushNamed(
-      NamedRoute.viewProfilePhotoScreen,
-      arguments: ViewProfilePhotoScreenArguments(imageFile: profilePictureFile),
-    );
+    if (profilePictureFile.path != "") {
+      _navService.nav.pushNamed(
+        NamedRoute.viewProfilePhotoScreen,
+        arguments:
+            ViewProfilePhotoScreenArguments(imageFile: profilePictureFile),
+      );
+    }
   }
 
   deleteProfilePhotoHandler(BuildContext context) {
-    // TODO : open alert to cancel OR sure and close this modal
+    if (profilePictureFile.path == "") {
+      return;
+    }
+    closeBottamModalHandler(context);
+    Utils.showMaterialBanner(
+      context,
+      "Are you sure?",
+      actions: [
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+            showProfilePictureOptionsBottomModel(context);
+          },
+        ),
+        TextButton(
+          child: const Text('Delete'),
+          onPressed: () {
+            // Perform delete operation
+            Navigator.of(context).pop(); // Close the dialog
+          },
+        ),
+      ],
+      autoCloseDuration: const Duration(seconds: 30),
+    );
   }
 
   editProfilePhotoHandler(BuildContext context) {

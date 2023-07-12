@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_screen_2/screens/account_details_screen/views/account_details_screen.view.dart';
 import 'package:login_screen_2/screens/home_screen/views/home_screen.view.dart';
 import 'package:login_screen_2/screens/login_screen/views/login_screen.view.dart';
 import 'package:login_screen_2/screens/login_screen/views/new_user_details_screen.view.dart';
@@ -51,7 +52,11 @@ class AppRoutes {
           builder: (context) => const ViewProfilePhotoScreen(),
           settings: settings,
         );
-
+      case NamedRoute.accountDetailsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const AccountDetailsScreen(),
+          settings: settings,
+        );
       default:
         return MaterialPageRoute(
           builder: (context) => const _UndefinedView(),
@@ -83,4 +88,5 @@ class NamedRoute {
   static const String newUserDetailsScreen = "/signup-user-details-form";
   static const String profileScreen = "/profile";
   static const String viewProfilePhotoScreen = "/view-profile-photo";
+  static const String accountDetailsScreen = "/profile-details";
 }

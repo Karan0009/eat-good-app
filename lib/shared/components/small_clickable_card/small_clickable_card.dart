@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:login_screen_2/shared/components/margin/margin.dart';
 
-class MenuItem extends StatelessWidget {
+class SmallClickableCard extends StatelessWidget {
   final String title;
   final String svgPath;
-  const MenuItem({super.key, required this.title, required this.svgPath});
+  final Function onTap;
+  const SmallClickableCard({
+    super.key,
+    required this.title,
+    required this.svgPath,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
         // color: const Color.fromRGBO(252, 252, 253, 1),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -29,6 +39,8 @@ class MenuItem extends StatelessWidget {
               textAlign: TextAlign.center,
             )
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

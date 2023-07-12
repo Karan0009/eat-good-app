@@ -9,8 +9,8 @@ import '../../../locator.dart';
 import '../../../shared/components/loading_overlay/loading_overlay.dart';
 import '../../../shared/components/margin/margin.dart';
 import '../../../shared/providers/user_provider.dart';
-import '../components/avatar_circle/avatar_circle.dart';
-import '../components/menu_item/menu_item.dart';
+import '../../../shared/components/avatar_circle/avatar_circle.dart';
+import '../../../shared/components/small_clickable_card/small_clickable_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -129,10 +129,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           .getMenuItems()
                           .length, // Total number of items in the grid
                       itemBuilder: (BuildContext context, int index) {
-                        return MenuItem(
+                        return SmallClickableCard(
                           svgPath: vm.getMenuItems()[index].icon,
                           title: AppLocalizations.of(context)
                               .translate(vm.getMenuItems()[index].title),
+                          onTap: () {
+                            vm.profileMenuNavHandler(
+                                vm.getMenuItems()[index].link);
+                          },
                         );
                       },
                     ),

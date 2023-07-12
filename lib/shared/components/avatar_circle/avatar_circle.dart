@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../view_models/profile.viewmodel.dart';
+import '../../../screens/profile_screen/view_models/profile.viewmodel.dart';
 
 class AvatarCircle extends StatelessWidget {
   const AvatarCircle({super.key});

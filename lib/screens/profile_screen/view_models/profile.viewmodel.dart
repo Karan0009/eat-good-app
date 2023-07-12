@@ -35,26 +35,32 @@ class ProfileScreenViewModel extends LoadingViewModel {
     MenuItemModel(
       icon: 'assets/icons/profile_details_icon.svg',
       title: "profileDetails",
+      link: NamedRoute.accountDetailsScreen,
     ),
     MenuItemModel(
       icon: 'assets/icons/places_icon.svg',
       title: "placesAdded",
+      link: NamedRoute.accountDetailsScreen,
     ),
     MenuItemModel(
       icon: 'assets/icons/profile_reviews_icon.svg',
       title: "yourReviews",
+      link: NamedRoute.accountDetailsScreen,
     ),
     MenuItemModel(
       icon: 'assets/icons/profile_saved_places_icon.svg',
       title: "savedPlaces",
+      link: NamedRoute.accountDetailsScreen,
     ),
     MenuItemModel(
       icon: 'assets/icons/profile_settings_icon.svg',
       title: "generalPreferences",
+      link: NamedRoute.accountDetailsScreen,
     ),
     MenuItemModel(
       icon: 'assets/icons/profile_feedback_icon.svg',
       title: "feedback",
+      link: NamedRoute.accountDetailsScreen,
     ),
   ];
 
@@ -304,5 +310,13 @@ class ProfileScreenViewModel extends LoadingViewModel {
 
   closeBottamModalHandler(BuildContext context) {
     _navService.nav.pop();
+  }
+
+  profileMenuNavHandler(link) {
+    try {
+      _navService.nav.pushNamed(link);
+    } catch (err) {
+      // some error occured
+    }
   }
 }

@@ -9,6 +9,14 @@ class Utils {
     );
   }
 
+  static void showWidgetSnackBar(BuildContext context, Widget content) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: content,
+      ),
+    );
+  }
+
   static ScaffoldFeatureController<MaterialBanner, MaterialBannerClosedReason>
       showMaterialBanner(BuildContext context, String message,
           {List<Widget> actions = const [Text("Cancel")],

@@ -1,3 +1,1 @@
-abstract class ProfileScreenRepo {
-  Future<bool> logoutUser();
-}
+abstract class ProfileScreenRepo {}

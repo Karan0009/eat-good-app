@@ -1,14 +1,11 @@
-import 'dart:convert';
-
-import 'package:firebase_auth/firebase_auth.dart';
-
 class CustomUser {
   String phoneNumber;
   String countryCode;
-  User? firebaseUser;
+  String? firebaseUser;
   String? email;
   String? firstName;
   String? lastName;
+  String? profilePhoto;
 
   CustomUser({
     required this.phoneNumber,
@@ -17,33 +14,45 @@ class CustomUser {
     this.email,
     this.firstName,
     this.lastName,
+    this.profilePhoto,
   });
 
   factory CustomUser.fromJson(Map<String, dynamic> json) {
-    User? firebaseUserData;
-    try {
-      firebaseUserData = jsonDecode(json["firebaseUser"]);
-    } catch (ex) {
-      firebaseUserData = null;
-    }
     return CustomUser(
-      phoneNumber: json["phoneNumber"],
-      countryCode: json["countryCode"],
-      firebaseUser: firebaseUserData,
-      email: json["email"] ?? "",
-      firstName: json["firstName"] ?? "",
-      lastName: json["lastName"] ?? "",
-    );
+        phoneNumber: json["phoneNumber"],
+        countryCode: json["countryCode"],
+        firebaseUser: json["firebaseUser"],
+        email: json["email"] ?? "",
+        firstName: json["firstName"] ?? "",
+        lastName: json["lastName"] ?? "",
+        profilePhoto: json["profilePhoto"] ?? "");
   }
 
   Map<String, dynamic> toJson() {
     return {
       "phoneNumber": phoneNumber,
       "countryCode": countryCode,
-      "firebaseUser": firebaseUser.toString(),
+      "firebaseUser": firebaseUser,
       "email": email,
       "firstName": firstName,
-      "lastName": lastName
+      "lastName": lastName,
+      "profilePhoto": profilePhoto
     };
+  }
+
+  String getFullName() {
+    return "${firstName ?? ''} ${lastName ?? ''}";
+  }
+
+  static List<String> parseFullName(String fullName) {
+    List<String> parsedFullName = [];
+    String lastName = "";
+    List<String> splittedFullName = fullName.split(' ');
+    if (splittedFullName.length > 1) {
+      lastName = splittedFullName.sublist(1).join(' ');
+    }
+    parsedFullName.add(splittedFullName[0]);
+    parsedFullName.add(lastName);
+    return parsedFullName;
   }
 }

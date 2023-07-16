@@ -8,4 +8,11 @@ class FirebaseConfig {
     }
     return userCollectionName;
   }
+
+  static const String _storageBucketUrl = "gs://eat-good-98f6d.appspot.com";
+  static String getStorageBucketUrl() {
+    return _storageBucketUrl;
+  }
+
+  static const String profilePicturesFolderPath = "profile_pictures";
 }

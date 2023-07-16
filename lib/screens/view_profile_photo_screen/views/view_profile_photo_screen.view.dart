@@ -74,7 +74,7 @@ class _ViewProfilePhotoScreenState extends State<ViewProfilePhotoScreen> {
             //   color: Colors.black,
             // ),
           ),
-          body: Image.file(vm.profilePicture),
+          body: Image.file(vm.profilePictureFile),
         ),
       ),
     );

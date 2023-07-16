@@ -86,7 +86,10 @@ class _HomeLandingScreenState extends State<HomeLandingScreen> {
             const Text("hello world"),
             const Text("home screen"),
             Text(userProvider.user?.firstName ?? ""),
-            Text(userProvider.user?.lastName ?? ""),
+            Text(userProvider.user?.email ?? ""),
+            if (userProvider.user?.profilePhoto != null)
+              Image.network(userProvider.user!.profilePhoto!,
+                  width: 100, height: 100),
             Text(userProvider.user?.phoneNumber ?? "")
           ],
         ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login_screen_2/locator.dart';
+import 'package:login_screen_2/shared/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../screens/profile_screen/view_models/profile.viewmodel.dart';
@@ -10,6 +12,7 @@ class AvatarCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width * 0.3;
     final vm = Provider.of<ProfileScreenViewModel>(context, listen: true);
+    final userProvider = locator<UserProvider>();
 
     return GestureDetector(
       onTap: () {
@@ -26,9 +29,12 @@ class AvatarCircle extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(214, 248, 184, 1),
                 borderRadius: BorderRadius.circular(width),
-                image: vm.profilePicture.path != ""
+                image: userProvider.user?.profilePhoto != null ||
+                        userProvider.user?.profilePhoto != ''
                     ? DecorationImage(
-                        image: FileImage(vm.profilePicture),
+                        image: NetworkImage(
+                          userProvider.user!.profilePhoto!,
+                        ),
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                       )
@@ -55,12 +61,15 @@ class AvatarCircle extends StatelessWidget {
                     width: 6,
                   ),
                 ),
-                child: const CircleAvatar(
-                  backgroundColor: Color.fromRGBO(104, 172, 108, 1),
+                child: CircleAvatar(
+                  backgroundColor: const Color.fromRGBO(104, 172, 108, 1),
                   child: Icon(
-                    Icons.add_rounded,
+                    userProvider.user?.profilePhoto != null ||
+                            userProvider.user?.profilePhoto != ''
+                        ? Icons.edit_rounded
+                        : Icons.add_rounded,
                     color: Colors.white,
-                    size: 30,
+                    size: 20,
                   ),
                 ),
               ),

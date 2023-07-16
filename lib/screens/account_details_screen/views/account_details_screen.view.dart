@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:login_screen_2/screens/profile_screen/view_models/profile.viewmodel.dart';
+import 'package:login_screen_2/shared/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:login_screen_2/shared/layouts/screen_layout.dart';
 import 'package:login_screen_2/shared/services/app_localizations_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../locator.dart';
 import '../../../shared/components/avatar_circle/avatar_circle.dart';
 import '../../../shared/components/custom_input/custom_input.dart';
 import '../../../shared/components/margin/margin.dart';
+import '../../../shared/providers/user_provider.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
   const AccountDetailsScreen({super.key});
@@ -28,6 +31,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
+    final userProvider = locator<UserProvider>();
     final vm = Provider.of<ProfileScreenViewModel>(context, listen: true);
 
     return ScreenLayout(
@@ -70,23 +74,84 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             const Margin(height: 10),
             const AvatarCircle(),
             const Margin(height: 10),
-            CustomInput(
-              label: "FULL NAME",
-              onChangeHandler: (val) {},
-              placeholder: "Full Name",
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                children: [
+                  CustomInput(
+                    label: "FULL NAME",
+                    onChangeHandler: (val) {
+                      vm.anyAccountDetailsInputChanged();
+                      vm.setFullName(val);
+                    },
+                    placeholder: "Full Name",
+                    value: userProvider.user?.getFullName() ?? "",
+                  ),
+                  const Margin(height: 20),
+                  CustomInput(
+                    label: "EMAIL",
+                    onChangeHandler: (val) {},
+                    placeholder: "Email",
+                    value: userProvider.user?.email ?? "",
+                    enabled: false,
+                  ),
+                  const Margin(height: 20),
+                  CustomInput(
+                    label: "PHONE NUMBER",
+                    onChangeHandler: (val) {},
+                    placeholder: "Phone Number",
+                    value: userProvider.user?.phoneNumber ?? "",
+                    enabled: false,
+                  ),
+                  const Margin(height: 20),
+                  CustomElevatedButton(
+                    disabled: !vm.isAnyAccountDetailsInputChanged,
+                    onPressed: () {
+                      vm.saveButtonClickHandler(context);
+                    },
+                    icon: const Icon(
+                      Icons.save_rounded,
+                      color: Color.fromRGBO(214, 248, 184, 1),
+                    ),
+                    style: Theme.of(context).elevatedButtonTheme.style,
+                    child: Text(
+                      "Save",
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontSize: 16,
+                            color: const Color.fromRGBO(214, 248, 184, 1),
+                          ),
+                    ),
+                  ),
+                  const Margin(height: 20),
+                  CustomElevatedButton(
+                    onPressed: () {
+                      vm.logoutButtonClickHandler(context);
+                    },
+                    icon: const Icon(
+                      Icons.exit_to_app,
+                      color: Color.fromRGBO(240, 68, 56, 1),
+                    ),
+                    style: null,
+                    child: Text(
+                      "Log Out",
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontSize: 16,
+                            color: const Color.fromRGBO(0, 0, 0, 1),
+                          ),
+                    ),
+                  ),
+                  const Margin(height: 10),
+                  Text(
+                    "You can always log back in with your phone number.",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      color: const Color.fromRGBO(152, 162, 179, 1),
+                    ),
+                  )
+                ],
+              ),
             ),
-            const Margin(height: 20),
-            CustomInput(
-              label: "EMAIL",
-              onChangeHandler: (val) {},
-              placeholder: "Email",
-            ),
-            const Margin(height: 20),
-            CustomInput(
-              label: "PHONE NUMBER",
-              onChangeHandler: (val) {},
-              placeholder: "Phone Number",
-            )
+
             // SizedBox(
             //   height: 400,
             //   // padding: const EdgeInsets.symmetric(horizontal: 30),

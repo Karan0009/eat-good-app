@@ -58,6 +58,7 @@ dependencies:
   another_flushbar: ^1.12.29
   image_picker: ^0.8.9
   image_cropper: ^4.0.1
+  firebase_storage: ^11.2.4
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:login_screen_2/locator.dart';
 import 'package:login_screen_2/screens/login_screen/models/phone_details.dart';
 import 'package:login_screen_2/shared/models/user_model.dart';
+import 'package:login_screen_2/shared/repositories/auth_repo/auth_repo.dart';
+import 'package:login_screen_2/shared/repositories/user_repo/user_repo.dart';
 import 'package:login_screen_2/shared/routes/routes.dart';
 import 'package:login_screen_2/shared/view_models/loading.viewmodel.dart';
 
@@ -10,13 +12,16 @@ import '../../home_screen/models/home_page_view_arguments.dart';
 import '../../../shared/providers/user_provider.dart';
 import '../../../shared/services/navigation_service.dart';
 import '../../../shared/utils/utils.dart';
-import '../repositories/login_screen_repo.dart';
 import '../views/otp_verification_screen.view.dart';
 
 class LoginViewModel extends LoadingViewModel {
-  LoginViewModel({required this.loginRepo}) : super();
+  LoginViewModel({
+    required this.authRepo,
+    required this.userRepo,
+  }) : super();
 
-  final LoginScreenRepo loginRepo;
+  final AuthRepo authRepo;
+  final UserRepository userRepo;
   // final UserProvider userProvider;
 
   final TextEditingController _pinController = TextEditingController();
@@ -37,17 +42,19 @@ class LoginViewModel extends LoadingViewModel {
     try {
       isLoading = true;
       if (otherPhoneDetails != null) {
-        await loginRepo.sendOtpWithFirebase(
-            otherPhoneDetails,
-            verificationFailedHandler(context),
-            codeSentHandler(context),
-            verificationCompletedHandler(context));
+        await authRepo.sendOtpWithFirebase(
+          otherPhoneDetails,
+          verificationFailedHandler(context),
+          codeSentHandler(context),
+          verificationCompletedHandler(context),
+        );
       } else {
-        await loginRepo.sendOtpWithFirebase(
-            phoneDetails,
-            verificationFailedHandler(context),
-            codeSentHandler(context),
-            verificationCompletedHandler(context));
+        await authRepo.sendOtpWithFirebase(
+          phoneDetails,
+          verificationFailedHandler(context),
+          codeSentHandler(context),
+          verificationCompletedHandler(context),
+        );
       }
     } on FirebaseAuthException catch (e) {
       isLoading = false;
@@ -147,19 +154,20 @@ class LoginViewModel extends LoadingViewModel {
       required String otpValue}) async {
     try {
       isLoading = true;
-      final user = await loginRepo.signInWithVerificationCode(otpValue);
+      final user = await authRepo.signInWithVerificationCode(otpValue);
       if (user == null) {
         throw Exception("no user found");
       }
       CustomUser loggedInUser = CustomUser(
         phoneNumber: user.phoneNumber ?? "",
         countryCode: "",
-        firebaseUser: user,
+        email: user.email,
+        firebaseUser: user.uid,
       );
       _userProvider.setLoggedInUser(loggedInUser);
-      bool isExistingUser = await loginRepo.checkExistingUser(user.uid);
+      bool isExistingUser = await userRepo.checkExistingUser(user.uid);
       if (isExistingUser) {
-        final userData = await loginRepo.getUserById(user.uid);
+        final userData = await userRepo.getUserById(user.uid);
         _userProvider.setLoggedInUser(CustomUser.fromJson(userData));
         final isUserSavedLocally =
             await _userProvider.saveLoggedInUserLocally();
@@ -240,7 +248,7 @@ class LoginViewModel extends LoadingViewModel {
       }
       var user = _userProvider.user;
       if (user != null) {
-        final isUserSaved = await loginRepo.saveNewUserDataWithFirestore(user);
+        final isUserSaved = await userRepo.saveNewUserDataWithFirestore(user);
         if (isUserSaved) {
           navigateToHome();
         } else {

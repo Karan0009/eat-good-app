@@ -11,6 +11,23 @@ class AppThemeData {
       color: Colors.black,
       size: 10,
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        disabledBackgroundColor: const Color.fromRGBO(
+          58,
+          100,
+          61,
+          0.5,
+        ),
+        padding: const EdgeInsets.all(12),
+        elevation: 0,
+        backgroundColor: const Color.fromRGBO(58, 100, 61, 1),
+        foregroundColor: const Color.fromRGBO(214, 248, 184, 1),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
+    ),
     textTheme: TextTheme(
       displayLarge: GoogleFonts.montserrat(
         textStyle: const TextStyle(
@@ -39,6 +56,23 @@ class AppThemeData {
   static final lightThemeData = ThemeData(
     brightness: Brightness.light,
     primaryColor: Colors.black,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        disabledBackgroundColor: const Color.fromRGBO(
+          58,
+          100,
+          61,
+          0.5,
+        ),
+        padding: const EdgeInsets.all(12),
+        elevation: 0,
+        backgroundColor: const Color.fromRGBO(58, 100, 61, 1),
+        foregroundColor: const Color.fromRGBO(214, 248, 184, 1),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
+    ),
     textTheme: TextTheme(
       displayLarge: GoogleFonts.montserrat(
         textStyle: const TextStyle(

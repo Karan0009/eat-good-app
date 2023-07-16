@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:login_screen_2/screens/home_landing_screen/view_models/home_landing_screen.viewmodel.dart';
 import 'package:login_screen_2/locator.dart';
-import 'package:login_screen_2/screens/login_screen/repositories/login_screen_repo.dart';
 import 'package:login_screen_2/screens/login_screen/view_models/login_screen.viewmodel.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:login_screen_2/screens/profile_screen/view_models/profile.viewmodel.dart';
 import 'package:login_screen_2/shared/providers/theme_provider.dart';
-// import 'package:login_screen_2/shared/providers/theme_provider.dart';
 import 'package:login_screen_2/shared/providers/user_provider.dart';
+import 'package:login_screen_2/shared/repositories/auth_repo/auth_repo.dart';
+import 'package:login_screen_2/shared/repositories/upload_image_repo/upload_image_repo.dart';
+import 'package:login_screen_2/shared/repositories/user_repo/user_repo.dart';
 import 'package:login_screen_2/shared/routes/routes.dart';
 import 'package:login_screen_2/shared/services/app_localizations_service.dart';
 import 'package:login_screen_2/shared/view_models/app.viewmodel.dart';
@@ -35,12 +36,16 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AppViewModel()),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(
-            loginRepo: locator<LoginScreenRepo>(),
+            authRepo: locator<AuthRepo>(),
+            userRepo: locator<UserRepository>(),
           ),
         ),
         ChangeNotifierProvider(
           create: (_) => ProfileScreenViewModel(
             profileRepo: locator<ProfileScreenRepo>(),
+            uploadImageRepo: locator<UploadImageRepo>(),
+            authRepo: locator<AuthRepo>(),
+            userRepo: locator<UserRepository>(),
           ),
         ),
         ChangeNotifierProvider(

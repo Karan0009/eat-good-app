@@ -1,20 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:login_screen_2/screens/login_screen/models/phone_details.dart';
-import 'package:login_screen_2/shared/models/user_model.dart';
 
 abstract class LoginScreenRepo {
-  Future<void> sendOtpWithFirebase(
-      PhoneDetails phoneDetails,
-      Function verificationFailedCallback,
-      Function codeSentCallback,
-      Function verificationCompletedCallback);
-  Future<User?> signInWithVerificationCode(String smsCode);
-  Future<bool> checkExistingUser(String userId);
-
-  Future<bool> saveNewUserDataWithFirestore(CustomUser user);
-
-  Future<Map<String, dynamic>> getUserById(String uid);
   // Future<String> getOtp(
   //     {required PhoneDetails phoneDetails,
   //     required void Function(PhoneAuthCredential) verificationCompletedHandler,

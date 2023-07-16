@@ -3,6 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_screen_2/screens/profile_screen/repositories/profile_screen_repo.dart';
+import 'package:login_screen_2/shared/config/firebase.dart';
+import 'package:login_screen_2/shared/models/user_model.dart';
+import 'package:login_screen_2/shared/repositories/auth_repo/auth_repo.dart';
+import 'package:login_screen_2/shared/repositories/upload_image_repo/upload_image_repo.dart';
+import 'package:login_screen_2/shared/repositories/user_repo/user_repo.dart';
 import 'package:login_screen_2/shared/routes/routes.dart';
 import 'package:login_screen_2/shared/services/add_image_service.dart';
 
@@ -14,20 +19,32 @@ import '../../../shared/view_models/loading.viewmodel.dart';
 import '../models/menu_item_model.dart';
 
 class ProfileScreenViewModel extends LoadingViewModel {
-  ProfileScreenViewModel({required this.profileRepo}) : super();
+  ProfileScreenViewModel({
+    required this.profileRepo,
+    required this.uploadImageRepo,
+    required this.authRepo,
+    required this.userRepo,
+  }) {
+    isAnyAccountDetailsInputChanged = false;
+  }
 
   final ProfileScreenRepo profileRepo;
+  final UploadImageRepo uploadImageRepo;
+  final AuthRepo authRepo;
+  final UserRepository userRepo;
+
   final UserProvider _userProvider = locator<UserProvider>();
   final NavigationService _navService = locator<NavigationService>();
   final AddImageService _addImageService = locator<AddImageService>();
 
   File _profilePictureFile = File("");
+  String? profilePictureUrl;
   set profilePictureFile(File input) {
     _profilePictureFile = input;
     notifyListeners();
   }
 
-  File get profilePicture {
+  File get profilePictureFile {
     return _profilePictureFile;
   }
 
@@ -67,7 +84,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
   Future<void> logoutButtonClickHandler(BuildContext context) async {
     try {
       isLoading = true;
-      final res = await profileRepo.logoutUser();
+      final res = await authRepo.logoutUser();
       if (!res) {
         throw Exception("Error in logging out");
       }
@@ -204,26 +221,42 @@ class ProfileScreenViewModel extends LoadingViewModel {
               onTap: () async {
                 switch (index) {
                   case 0:
-                    _addImageService
-                        .imagePickerAndCropperHandler(
-                            context, ImageSource.camera)
-                        .then((value) {
-                      if (value != null) {
-                        closeBottamModalHandler(context);
-                        profilePictureFile = value;
-                      }
-                    });
+                    File? file =
+                        await _addImageService.imagePickerAndCropperHandler(
+                      context,
+                      ImageSource.camera,
+                    );
+                    if (file == null) {
+                      return;
+                    }
+                    if (context.mounted) {
+                      closeBottamModalHandler(context);
+                      profilePictureFile = file;
+                      final url = await uploadImageRepo.uploadImage(
+                        profilePictureFile,
+                        FirebaseConfig.profilePicturesFolderPath,
+                      );
+                      await updateProfilePhotoHandler(url);
+                    }
                     break;
                   case 1:
-                    _addImageService
-                        .imagePickerAndCropperHandler(
-                            context, ImageSource.gallery)
-                        .then((value) {
-                      if (value != null) {
-                        closeBottamModalHandler(context);
-                        profilePictureFile = value;
-                      }
-                    });
+                    File? file =
+                        await _addImageService.imagePickerAndCropperHandler(
+                      context,
+                      ImageSource.gallery,
+                    );
+                    if (file == null) {
+                      return;
+                    }
+                    if (context.mounted) {
+                      closeBottamModalHandler(context);
+                      profilePictureFile = file;
+                      final url = await uploadImageRepo.uploadImage(
+                        profilePictureFile,
+                        FirebaseConfig.profilePicturesFolderPath,
+                      );
+                      await updateProfilePhotoHandler(url);
+                    }
                     break;
                   case 2:
                     closeBottamModalHandler(context);
@@ -263,7 +296,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
   }
 
   viewProfilePhotoHandler(BuildContext context) {
-    if (profilePicture.path != "") {
+    if (profilePictureFile.path != "") {
       _navService.nav.pushNamed(
         NamedRoute.viewProfilePhotoScreen,
       );
@@ -271,7 +304,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
   }
 
   deleteProfilePhotoHandler(BuildContext context) {
-    if (profilePicture.path == "") {
+    if (profilePictureFile.path == "") {
       return;
     }
     closeBottamModalHandler(context);
@@ -317,6 +350,83 @@ class ProfileScreenViewModel extends LoadingViewModel {
       _navService.nav.pushNamed(link);
     } catch (err) {
       // some error occured
+    }
+  }
+
+  //************* account details page ****************** */
+  String fullName = "";
+  setFullName(val) {
+    fullName = val;
+  }
+
+  bool isAnyAccountDetailsInputChanged = false;
+  anyAccountDetailsInputChanged() {
+    isAnyAccountDetailsInputChanged = true;
+    notifyListeners();
+  }
+
+  resetAllAccountDetailsInput() {
+    isAnyAccountDetailsInputChanged = false;
+    notifyListeners();
+  }
+
+  isUpdateAccountDetailsCompleted() {
+    isAnyAccountDetailsInputChanged = false;
+    notifyListeners();
+  }
+
+  Future<void> saveButtonClickHandler(BuildContext context) async {
+    try {
+      isLoading = true;
+      if (_userProvider.user != null) {
+        List<String> parsedFullName = CustomUser.parseFullName(fullName);
+        CustomUser updatedUser = CustomUser(
+          phoneNumber: _userProvider.user!.phoneNumber,
+          countryCode: _userProvider.user!.countryCode,
+          email: _userProvider.user!.email,
+          firebaseUser: _userProvider.user!.firebaseUser,
+          firstName: parsedFullName[0],
+          lastName: parsedFullName[1],
+          profilePhoto: _userProvider.user!.profilePhoto,
+        );
+        await userRepo.updateGeneralUserDataInFirestore(updatedUser);
+
+        _userProvider.setLoggedInUser(updatedUser);
+        await _userProvider.saveLoggedInUserLocally();
+      }
+      isUpdateAccountDetailsCompleted();
+      isLoading = false;
+      if (context.mounted) {
+        Utils.showSnackBar(context, "Updated Successfully");
+      }
+    } catch (err) {
+      isLoading = false;
+      Utils.showSnackBar(context, "Some error occured");
+    }
+  }
+
+  Future<void> updateProfilePhotoHandler(String url) async {
+    try {
+      isLoading = true;
+      await userRepo.updateProfilePictureInFirestore(
+        _userProvider.user!.firebaseUser!,
+        url,
+      );
+      CustomUser updatedUser = CustomUser(
+        phoneNumber: _userProvider.user!.phoneNumber,
+        countryCode: _userProvider.user!.countryCode,
+        email: _userProvider.user!.email,
+        firebaseUser: _userProvider.user!.firebaseUser,
+        firstName: _userProvider.user!.firstName,
+        lastName: _userProvider.user!.lastName,
+        profilePhoto: url,
+      );
+      _userProvider.setLoggedInUser(updatedUser);
+      await _userProvider.saveLoggedInUserLocally();
+      isLoading = false;
+    } catch (err) {
+      isLoading = false;
+      rethrow;
     }
   }
 }

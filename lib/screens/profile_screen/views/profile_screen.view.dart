@@ -5,10 +5,8 @@ import 'package:login_screen_2/shared/services/app_localizations_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../locator.dart';
 import '../../../shared/components/loading_overlay/loading_overlay.dart';
 import '../../../shared/components/margin/margin.dart';
-import '../../../shared/providers/user_provider.dart';
 import '../../../shared/components/avatar_circle/avatar_circle.dart';
 import '../../../shared/components/small_clickable_card/small_clickable_card.dart';
 
@@ -29,7 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = locator<UserProvider>();
     double screenHeight = MediaQuery.of(context).size.height * 0.95;
     final vm = Provider.of<ProfileScreenViewModel>(context, listen: true);
 
@@ -69,22 +66,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            actions: [
-              if (userProvider.user != null)
-                ElevatedButton(
-                  onPressed: () {
-                    vm.logoutButtonClickHandler(context);
-                  },
-                  child: const Text("Logout"),
-                ),
-              if (userProvider.user == null)
-                ElevatedButton(
-                  onPressed: () {
-                    vm.loginButtonClickHandler(context);
-                  },
-                  child: const Text("Login"),
-                ),
-            ],
+            // actions: [
+            //   if (userProvider.user != null)
+            //     ElevatedButton(
+            //       onPressed: () {
+            //         vm.logoutButtonClickHandler(context);
+            //       },
+            //       child: const Text("Logout"),
+            //     ),
+            //   if (userProvider.user == null)
+            //     ElevatedButton(
+            //       onPressed: () {
+            //         vm.loginButtonClickHandler(context);
+            //       },
+            //       child: const Text("Login"),
+            //     ),
+            // ],
             // const Icon(
             //   Icons.arrow_back,
             //   color: Colors.black,

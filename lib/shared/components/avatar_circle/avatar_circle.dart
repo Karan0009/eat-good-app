@@ -29,22 +29,13 @@ class AvatarCircle extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(214, 248, 184, 1),
                 borderRadius: BorderRadius.circular(width),
-                image: userProvider.user?.profilePhoto != null ||
-                        userProvider.user?.profilePhoto != ''
-                    ? DecorationImage(
-                        image: NetworkImage(
-                          userProvider.user!.profilePhoto!,
-                        ),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      )
-                    : const DecorationImage(
-                        image: AssetImage(
-                          "assets/images/profile_cover_illustration.png",
-                        ),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    userProvider.user!.profilePhoto!,
+                  ),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                ),
                 border: Border.all(
                   color: Colors.white,
                   width: 6,

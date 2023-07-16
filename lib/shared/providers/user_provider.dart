@@ -47,6 +47,20 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  bool setProfilePhoto(String imageUrl) {
+    try {
+      if (_user != null) {
+        _user?.profilePhoto = imageUrl;
+        return true;
+      }
+      return false;
+    } catch (ex) {
+      _user = null;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> saveLoggedInUserLocally() async {
     try {
       final SharedPreferences sp = await SharedPreferences.getInstance();

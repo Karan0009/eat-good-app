@@ -31,7 +31,7 @@ class AvatarCircle extends StatelessWidget {
                 borderRadius: BorderRadius.circular(width),
                 image: DecorationImage(
                   image: NetworkImage(
-                    userProvider.user!.profilePhoto!,
+                    userProvider.user!.profilePhoto.url,
                   ),
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
@@ -55,8 +55,7 @@ class AvatarCircle extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor: const Color.fromRGBO(104, 172, 108, 1),
                   child: Icon(
-                    userProvider.user?.profilePhoto != null ||
-                            userProvider.user?.profilePhoto != ''
+                    userProvider.user?.profilePhoto != null
                         ? Icons.edit_rounded
                         : Icons.add_rounded,
                     color: Colors.white,

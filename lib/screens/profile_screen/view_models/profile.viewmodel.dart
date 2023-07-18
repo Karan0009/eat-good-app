@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_screen_2/screens/profile_screen/repositories/profile_screen_repo.dart';
 import 'package:login_screen_2/shared/config/firebase.dart';
+import 'package:login_screen_2/shared/constants/app_constants.dart';
+import 'package:login_screen_2/shared/models/image_details.dart';
 import 'package:login_screen_2/shared/models/user_model.dart';
 import 'package:login_screen_2/shared/repositories/auth_repo/auth_repo.dart';
 import 'package:login_screen_2/shared/repositories/upload_image_repo/upload_image_repo.dart';
@@ -221,42 +223,16 @@ class ProfileScreenViewModel extends LoadingViewModel {
               onTap: () async {
                 switch (index) {
                   case 0:
-                    File? file =
-                        await _addImageService.imagePickerAndCropperHandler(
+                    await _selectImageAndUploadHandler(
                       context,
                       ImageSource.camera,
                     );
-                    if (file == null) {
-                      return;
-                    }
-                    if (context.mounted) {
-                      closeBottamModalHandler(context);
-                      profilePictureFile = file;
-                      final url = await uploadImageRepo.uploadImage(
-                        profilePictureFile,
-                        FirebaseConfig.profilePicturesFolderPath,
-                      );
-                      await updateProfilePhotoHandler(url);
-                    }
                     break;
                   case 1:
-                    File? file =
-                        await _addImageService.imagePickerAndCropperHandler(
+                    await _selectImageAndUploadHandler(
                       context,
                       ImageSource.gallery,
                     );
-                    if (file == null) {
-                      return;
-                    }
-                    if (context.mounted) {
-                      closeBottamModalHandler(context);
-                      profilePictureFile = file;
-                      final url = await uploadImageRepo.uploadImage(
-                        profilePictureFile,
-                        FirebaseConfig.profilePicturesFolderPath,
-                      );
-                      await updateProfilePhotoHandler(url);
-                    }
                     break;
                   case 2:
                     closeBottamModalHandler(context);
@@ -300,6 +276,33 @@ class ProfileScreenViewModel extends LoadingViewModel {
       _navService.nav.pushNamed(
         NamedRoute.viewProfilePhotoScreen,
       );
+    }
+  }
+
+  _selectImageAndUploadHandler(BuildContext context, ImageSource source) async {
+    File? file = await _addImageService.imagePickerAndCropperHandler(
+      context,
+      source,
+    );
+    if (file == null) {
+      return;
+    }
+    if (context.mounted) {
+      isLoading = true;
+      closeBottamModalHandler(context);
+      profilePictureFile = file;
+      ImageDetails prevProfilePhoto = _userProvider.user!.profilePhoto;
+      final imageDetails = await uploadImageRepo.uploadImage(
+        profilePictureFile,
+        FirebaseConfig.profilePicturesFolderPath,
+        fileName:
+            "${_userProvider.user!.firebaseUser!}_${DateTime.now().millisecondsSinceEpoch}",
+      );
+      await updateProfilePhotoHandler(imageDetails);
+      if (prevProfilePhoto.path != AppConstants.defaultProfilePhoto.path) {
+        await uploadImageRepo.deleteImage(prevProfilePhoto.path);
+      }
+      isLoading = false;
     }
   }
 
@@ -405,12 +408,12 @@ class ProfileScreenViewModel extends LoadingViewModel {
     }
   }
 
-  Future<void> updateProfilePhotoHandler(String url) async {
+  Future<void> updateProfilePhotoHandler(ImageDetails imageDetails) async {
     try {
       isLoading = true;
       await userRepo.updateProfilePictureInFirestore(
         _userProvider.user!.firebaseUser!,
-        url,
+        imageDetails,
       );
       CustomUser updatedUser = CustomUser(
         phoneNumber: _userProvider.user!.phoneNumber,
@@ -419,7 +422,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
         firebaseUser: _userProvider.user!.firebaseUser,
         firstName: _userProvider.user!.firstName,
         lastName: _userProvider.user!.lastName,
-        profilePhoto: url,
+        profilePhoto: imageDetails,
       );
       _userProvider.setLoggedInUser(updatedUser);
       await _userProvider.saveLoggedInUserLocally();

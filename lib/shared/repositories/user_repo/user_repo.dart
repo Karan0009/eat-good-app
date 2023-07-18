@@ -1,3 +1,4 @@
+import '../../models/image_details.dart';
 import '../../models/user_model.dart';
 
 abstract class UserRepository {
@@ -9,5 +10,6 @@ abstract class UserRepository {
 
   Future<bool> updateGeneralUserDataInFirestore(CustomUser updatedUser);
 
-  Future<bool> updateProfilePictureInFirestore(String uid, String imageUrl);
+  Future<bool> updateProfilePictureInFirestore(
+      String uid, ImageDetails imageDetails);
 }

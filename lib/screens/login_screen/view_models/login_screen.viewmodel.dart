@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:login_screen_2/locator.dart';
 import 'package:login_screen_2/screens/login_screen/models/phone_details.dart';
 import 'package:login_screen_2/shared/constants/app_constants.dart';
+import 'package:login_screen_2/shared/models/image_details.dart';
 import 'package:login_screen_2/shared/models/user_model.dart';
 import 'package:login_screen_2/shared/repositories/auth_repo/auth_repo.dart';
 import 'package:login_screen_2/shared/repositories/user_repo/user_repo.dart';
@@ -164,6 +165,7 @@ class LoginViewModel extends LoadingViewModel {
         countryCode: "",
         email: user.email,
         firebaseUser: user.uid,
+        profilePhoto: ImageDetails.empty(),
       );
       _userProvider.setLoggedInUser(loggedInUser);
       bool isExistingUser = await userRepo.checkExistingUser(user.uid);
@@ -242,7 +244,7 @@ class LoginViewModel extends LoadingViewModel {
       if (lastName != null) {
         _userProvider.setLastName(lastName);
       }
-      _userProvider.setProfilePhoto(AppConstants.defaultProfilePhotoUrl);
+      _userProvider.setProfilePhoto(AppConstants.defaultProfilePhoto);
 
       final isUserSavedLocally = await _userProvider.saveLoggedInUserLocally();
       if (!isUserSavedLocally) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:login_screen_2/shared/constants/app_constants.dart';
+import 'package:login_screen_2/shared/models/image_details.dart';
 import 'package:login_screen_2/shared/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -47,10 +48,10 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  bool setProfilePhoto(String imageUrl) {
+  bool setProfilePhoto(ImageDetails imageDetails) {
     try {
       if (_user != null) {
-        _user?.profilePhoto = imageUrl;
+        _user?.profilePhoto = imageDetails;
         return true;
       }
       return false;

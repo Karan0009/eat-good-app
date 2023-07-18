@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:login_screen_2/shared/models/image_details.dart';
 import 'package:login_screen_2/shared/repositories/user_repo/user_repo.dart';
 
 import '../../../locator.dart';
@@ -90,13 +91,13 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<bool> updateProfilePictureInFirestore(
-      String uid, String imageUrl) async {
+      String uid, ImageDetails imageDetails) async {
     try {
       String userCollectionName = FirebaseConfig.getCollectionName("users");
       DocumentReference doc =
           _firebaseFirestore.collection(userCollectionName).doc(uid);
       await doc.update({
-        "profilePhoto": imageUrl,
+        "profilePhoto": imageDetails.toJson(),
       });
       return true;
     } catch (err) {

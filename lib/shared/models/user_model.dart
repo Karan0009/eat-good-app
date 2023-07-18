@@ -1,3 +1,5 @@
+import 'package:login_screen_2/shared/models/image_details.dart';
+
 class CustomUser {
   String phoneNumber;
   String countryCode;
@@ -5,7 +7,7 @@ class CustomUser {
   String? email;
   String? firstName;
   String? lastName;
-  String? profilePhoto;
+  ImageDetails profilePhoto;
 
   CustomUser({
     required this.phoneNumber,
@@ -14,18 +16,21 @@ class CustomUser {
     this.email,
     this.firstName,
     this.lastName,
-    this.profilePhoto,
+    required this.profilePhoto,
   });
 
   factory CustomUser.fromJson(Map<String, dynamic> json) {
     return CustomUser(
-        phoneNumber: json["phoneNumber"],
-        countryCode: json["countryCode"],
-        firebaseUser: json["firebaseUser"],
-        email: json["email"] ?? "",
-        firstName: json["firstName"] ?? "",
-        lastName: json["lastName"] ?? "",
-        profilePhoto: json["profilePhoto"] ?? "");
+      phoneNumber: json["phoneNumber"],
+      countryCode: json["countryCode"],
+      firebaseUser: json["firebaseUser"],
+      email: json["email"] ?? "",
+      firstName: json["firstName"] ?? "",
+      lastName: json["lastName"] ?? "",
+      profilePhoto: ImageDetails.fromJson(
+        json["profilePhoto"],
+      ),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -36,7 +41,7 @@ class CustomUser {
       "email": email,
       "firstName": firstName,
       "lastName": lastName,
-      "profilePhoto": profilePhoto
+      "profilePhoto": profilePhoto.toJson()
     };
   }
 

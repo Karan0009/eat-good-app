@@ -4,7 +4,7 @@ import 'package:login_screen_2/shared/providers/theme_provider.dart';
 import 'package:login_screen_2/shared/providers/user_provider.dart';
 import 'package:login_screen_2/shared/routes/routes.dart';
 import 'package:login_screen_2/shared/services/navigation_service.dart';
-import 'package:login_screen_2/shared/utils/utils.dart';
+// import 'package:login_screen_2/shared/utils/utils.dart';
 import 'package:login_screen_2/shared/view_models/loading.viewmodel.dart';
 
 import '../../screens/home_screen/models/home_page_view_arguments.dart';
@@ -33,7 +33,7 @@ class AppViewModel extends LoadingViewModel {
       }
     } catch (ex) {
       isLoading = false;
-      Utils.showSnackBar(context, "Some error occured");
+      // Utils.showSnackBar(context, "Some error occured");
     }
   }
 

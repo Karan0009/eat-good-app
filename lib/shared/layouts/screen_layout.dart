@@ -6,7 +6,7 @@ class ScreenLayout extends StatelessWidget {
   final double screenHeight;
   final Widget child;
   final AppBar? appBar;
-  final BottomNavigationBar? bottomNavigationBar;
+  final Widget? bottomNavigationBar;
   const ScreenLayout(
       {required this.isLoading,
       required this.screenHeight,

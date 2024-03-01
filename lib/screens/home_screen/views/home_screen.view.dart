@@ -20,7 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedBottomNavBarIndex = 0;
   final List<Widget> _widgetOptions = const [
     HomeLandingScreen(),
-    HomeLandingScreen()
+    HomeLandingScreen(),
+    HomeLandingScreen(),
+    HomeLandingScreen(),
   ];
   @override
   void initState() {
@@ -36,24 +38,62 @@ class _HomeScreenState extends State<HomeScreen> {
     return ScreenLayout(
       isLoading: vm.isLoading,
       screenHeight: screenHeight,
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: Stack(
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
+        children: [
+          BottomNavigationBar(
+            unselectedIconTheme: const IconThemeData(
+              color: Colors.red,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              color: Colors.redAccent,
+            ),
+            // backgroundColor: const Color(0x00ffffff),
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: selectedBottomNavBarIndex,
+            selectedItemColor: Theme.of(context).primaryColor,
+            onTap: (curIndex) {
+              setState(() {
+                selectedBottomNavBarIndex = curIndex;
+              });
+            },
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          Positioned(
+            top: -25,
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  color: Colors.pink,
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(
+                    color: Colors.green,
+                    width: 2,
+                  )),
+              child: const Icon(
+                Icons.flutter_dash_rounded,
+                color: Colors.black,
+              ),
+            ),
+          )
         ],
-        currentIndex: selectedBottomNavBarIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
-        onTap: (curIndex) {
-          setState(() {
-            selectedBottomNavBarIndex = curIndex;
-          });
-        },
       ),
       child: _widgetOptions[selectedBottomNavBarIndex],
     );

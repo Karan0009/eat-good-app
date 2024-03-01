@@ -101,7 +101,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
       );
     } catch (ex) {
       isLoading = false;
-      Utils.showSnackBar(context, "Some error occured");
+      // Utils.showSnackBar(context, "Some error occured");
     }
   }
 
@@ -404,7 +404,7 @@ class ProfileScreenViewModel extends LoadingViewModel {
       }
     } catch (err) {
       isLoading = false;
-      Utils.showSnackBar(context, "Some error occured");
+      // Utils.showSnackBar(context, "Some error occured");
     }
   }
 

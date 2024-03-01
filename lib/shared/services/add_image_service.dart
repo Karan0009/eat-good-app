@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../utils/utils.dart';
+// import '../utils/utils.dart';
 
 class AddImageService {
   AddImageService();
@@ -68,7 +68,7 @@ class AddImageService {
       }
       return File(croppedImage.path);
     } catch (ex) {
-      Utils.showMaterialBanner(context, ex.toString());
+      // Utils.showMaterialBanner(context, ex.toString());
       return null;
     }
   }

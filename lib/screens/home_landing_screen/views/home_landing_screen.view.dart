@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:login_screen_2/screens/home_landing_screen/view_models/home_landing_screen.viewmodel.dart';
+import '../../../screens/home_landing_screen/view_models/home_landing_screen.viewmodel.dart';
+import '../../../shared/components/loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../locator.dart';
@@ -22,6 +23,11 @@ class _HomeLandingScreenState extends State<HomeLandingScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userProvider = locator<UserProvider>();
     final vm = Provider.of<HomeLandingViewModel>(context, listen: true);
@@ -39,59 +45,63 @@ class _HomeLandingScreenState extends State<HomeLandingScreen> {
     //   ),
     // );
 
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text("Ahoy ${userProvider.user?.firstName} 👋"),
-          // leadingWidth: 100
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          titleTextStyle: GoogleFonts.montserrat(
-            textStyle: const TextStyle(fontSize: 20),
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-          actions: [
-            GestureDetector(
-                onTap: () {
-                  vm.profileAvatarClickHandler();
-                },
-                child: CircleAvatar(
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          extendBody: true,
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text("Ahoy ${userProvider.user?.firstName} 👋"),
+            // leadingWidth: 100
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            titleTextStyle: GoogleFonts.montserrat(
+              textStyle: const TextStyle(fontSize: 20),
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            actions: [
+              GestureDetector(
+                  onTap: () {
+                    vm.profileAvatarClickHandler();
+                  },
+                  child: CircleAvatar(
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                ))
-          ],
-          // leading: Container(
-          //   // height: screenHeight,
-          //   margin: const EdgeInsets.all(20),
-          //   child: SvgPicture.asset(
-          //     'assets/icons/arrow_back_icon.svg',
-          //     semanticsLabel: "back icon",
-          //     color: Colors.white,
-          //   ),
-          // ),
-        ),
-        body: Column(
-          children: [
-            const Text("hello world"),
-            const Text("home screen"),
-            Text(userProvider.user?.firstName ?? ""),
-            Text(userProvider.user?.email ?? ""),
-            if (userProvider.user?.profilePhoto != null)
-              Image.network(userProvider.user!.profilePhoto.url,
-                  width: 100, height: 100),
-            Text(userProvider.user?.phoneNumber ?? "")
-          ],
+                  ))
+            ],
+            // leading: Container(
+            //   // height: screenHeight,
+            //   margin: const EdgeInsets.all(20),
+            //   child: SvgPicture.asset(
+            //     'assets/icons/arrow_back_icon.svg',
+            //     semanticsLabel: "back icon",
+            //     color: Colors.white,
+            //   ),
+            // ),
+          ),
+          body: Column(
+            children: [
+              const Text("hello world"),
+              const Text("home screen"),
+              Text(userProvider.user?.firstName ?? ""),
+              Text(userProvider.user?.email ?? ""),
+              if (userProvider.user?.profilePhoto != null)
+                Image.network(userProvider.user!.profilePhoto.url,
+                    width: 100, height: 100),
+              Text(userProvider.user?.phoneNumber ?? ""),
+            ],
+          ),
         ),
       ),
     );

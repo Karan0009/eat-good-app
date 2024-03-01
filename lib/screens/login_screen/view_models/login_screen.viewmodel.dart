@@ -58,12 +58,14 @@ class LoginViewModel extends LoadingViewModel {
           verificationCompletedHandler(context),
         );
       }
-    } on FirebaseAuthException catch (e) {
+    }
+    // on FirebaseAuthException catch (e) {
+    //   isLoading = false;
+    //   // Utils.showSnackBar(context, e.message.toString());
+    // }
+    catch (ex) {
       isLoading = false;
-      Utils.showSnackBar(context, e.message.toString());
-    } catch (ex) {
-      isLoading = false;
-      Utils.showSnackBar(context, "Some error occured");
+      // Utils.showSnackBar(context, "Some error occured");
     }
   }
 
@@ -191,12 +193,14 @@ class LoginViewModel extends LoadingViewModel {
         );
       }
       isLoading = false;
-    } on FirebaseAuthException catch (e) {
+    }
+    //  on FirebaseAuthException catch (e) {
+    //   isLoading = false;
+    //   // Utils.showSnackBar(context, e.message.toString());
+    // }
+    catch (ex) {
       isLoading = false;
-      Utils.showSnackBar(context, e.message.toString());
-    } catch (ex) {
-      isLoading = false;
-      Utils.showSnackBar(context, "Some error occured");
+      // Utils.showSnackBar(context, "Some error occured");
     }
   }
 
@@ -262,7 +266,7 @@ class LoginViewModel extends LoadingViewModel {
       isLoading = false;
     } catch (ex) {
       isLoading = false;
-      Utils.showSnackBar(context, "Some error occured");
+      // Utils.showSnackBar(context, "Some error occured");
     }
   }
 }

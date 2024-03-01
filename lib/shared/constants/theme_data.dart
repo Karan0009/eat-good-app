@@ -50,7 +50,9 @@ class AppThemeData {
         ),
       ),
     ),
-    backgroundColor: Colors.black,
+    colorScheme: const ColorScheme.dark(
+      background: Colors.black,
+    ),
   );
 
   static final lightThemeData = ThemeData(
@@ -95,6 +97,8 @@ class AppThemeData {
         ),
       ),
     ),
-    backgroundColor: Colors.white,
+    colorScheme: const ColorScheme.light(
+      background: Colors.white,
+    ),
   );
 }

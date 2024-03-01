@@ -56,6 +56,7 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => HomeLandingViewModel(
             homeRepo: locator<HomeScreenRepository>(),
+            userRepo: locator<UserRepository>(),
           ),
         )
       ],
